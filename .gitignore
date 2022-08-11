@@ -7,6 +7,14 @@
 node_modules/
 dist/
 
+
+#Venv
+/venv
+/backpack
+venv/
+backpack/
+
+
 # Compiled Java class files
 *.class
 
