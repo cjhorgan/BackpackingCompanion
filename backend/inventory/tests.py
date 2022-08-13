@@ -144,3 +144,45 @@ class FoodItemsTestCase(TestCase):
     def test_delete_fooditem(self):
         request = self.client.delete('/fooditems/3/')
         self.assertEqual(request.status_code, 204)
+
+
+class InventoryTestCase(TestCase):
+    def setUp(self):
+        medical = Category.objects.create(name="Medical",slug="MED")
+        clothing = Category.objects.create(name="Clothing",slug="CLO")
+        
+
+        for num in range(0,10):
+            if num % 2 == 0:
+                Item.objects.create(item_name=f'EssItem{num}', item_weight=1,item_category=medical,item_description=f'Essential Item {num}',isEssential=True,isFavorite=True)
+                FoodItem.objects.create(item_name=f'fooditem{num}', item_weight=8,item_description=f'Food Item {num}',calories=310,protein=11,sugar=2)
+            else:
+                Item.objects.create(item_name=f'NonEssItem{num}', item_weight=1,item_category=clothing,item_description=f'Non-Essential Item {num}',isEssential=False,isFavorite=False)
+                FoodItem.objects.create(item_name=f'fooditem{num}', item_weight=8,item_description=f'Food Item {num}',calories=310,protein=11,sugar=2)
+        
+        inventory = Inventory.objects.create(inventory_name = 'Inventory_1')
+        
+        self.client = Client()
+
+    def test_get_inventories(self):
+
+        request = self.client.get('/inventory/')
+        self.assertEqual(request.status_code, 200)
+        self.assertEqual(len(request.data), 1)
+    
+    def test_get_single_inventory(self):
+
+        request = self.client.get('/inventory/1/')
+        self.assertEqual(request.status_code, 200)
+    
+    def test_post_inventory_and_signals(self):
+        post_data =  {
+            'inventory_name' : 'PostedInventory'
+        }
+        #Post request
+        request = self.client.post('/inventory/', post_data)
+        post_inv = Inventory.objects.get(inventory_name = 'PostedInventory')
+        inventory_items = ItemQuantity.objects.filter(inventory = post_inv)
+        essential_items = Item.objects.filter(isEssential = True)
+
+        self.assertEqual(essential_items.count(), inventory_items.count())
