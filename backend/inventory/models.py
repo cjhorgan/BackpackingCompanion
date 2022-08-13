@@ -2,7 +2,7 @@ from lib2to3.pgen2.token import PERCENT
 from random import choices
 from tkinter import CASCADE
 from django.db import models
-from Trip.models import Meal , Hiker
+#from trip.models import Meal , Hiker
 
 # Create your models here.
 
@@ -35,7 +35,7 @@ class Item(models.Model):
     item_name = models.CharField(max_length=64)
     item_weight = models.FloatField()
     item_category = models.ForeignKey('Category', null=True, blank=True, on_delete=models.DO_NOTHING)
-    item_hiker_owner = models.ForeignKey('Hiker', on_delete=models.DO_NOTHING)
+    #item_hiker_owner = models.ForeignKey('Hiker', on_delete=models.DO_NOTHING)
     item_description = models.CharField(max_length=128)
     item_creation_date = models.DateTimeField(auto_now_add=True)
     item_last_use_date = models.DateTimeField(auto_now=True)
@@ -58,7 +58,7 @@ class Inventory(models.Model):
     inventory_id = models.BigAutoField(primary_key=True)
     inventory_name = models.CharField(max_length=30, unique=True)
     inventory_items = models.ManyToManyField(Item, through='ItemQuantity', blank=True,)
-    inventory_hiker = models.ForeignKey(Hiker, on_delete=models.DO_NOTHING)
+    #inventory_hiker = models.ForeignKey(Hiker, on_delete=models.DO_NOTHING)
 
     def add_weight(self, items):
         total_weight = 0
@@ -79,7 +79,7 @@ class Inventory(models.Model):
 class ItemQuantity(models.Model):
     inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
     item = models.ForeignKey(Item,on_delete=models.CASCADE)
-    meal = models.ForeignKey(Meal, on_delete=models.DO_NOTHING, blank=True, null=True)
+    #meal = models.ForeignKey(Meal, on_delete=models.DO_NOTHING, blank=True, null=True)
     item_quantity = models.PositiveSmallIntegerField()
     isMultiple = models.BooleanField(default=False)
     item_note = models.TextField()

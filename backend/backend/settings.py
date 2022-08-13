@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'inventory.apps.InventoryConfig',
+    #'trip.apps.TripConfig'
 ]
 
 MIDDLEWARE = [

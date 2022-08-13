@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import Inventory, ItemQuantity, Item
-from Trip.models import Hiker
+from trip.models import Hiker
 
 
 @receiver(post_save,sender=Inventory)
