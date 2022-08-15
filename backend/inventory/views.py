@@ -1,10 +1,9 @@
-from unicodedata import category
 from django.http import Http404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .serializers import ItemSerializer, FoodItemSerializer, ItemQuantitySerializer, InventorySerializer
+from .serializers import ItemBasicSerializer, ItemContentsSerializer, FoodItemSerializer, ItemQuantitySerializer, InventorySerializer
 from .models import Item, FoodItem, Inventory, Category, ItemQuantity
 
 @api_view(['Get'])
@@ -41,16 +40,19 @@ class ItemList(APIView):
     # List All Items or create an item
     def get(self, request, format=None):
         items = Item.objects.all()
-        serializer = ItemSerializer(items, many=True)
+        serializer = ItemBasicSerializer(items, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = ItemSerializer(data=request.data)
+        serializer = ItemBasicSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    def delete(self, request, pk, format=None):
+        item = self.getItem(pk)
+        item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 class ItemDetail(APIView):
     #Retrieve, update, delete a specific item
 
@@ -62,12 +64,12 @@ class ItemDetail(APIView):
     
     def get(self, request, pk, format=None):
         item = self.getItem(pk)
-        serializer = ItemSerializer(item, many=False)
+        serializer = ItemBasicSerializer(item, many=False)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
         item = self.getItem(pk)
-        serializer = ItemSerializer(item, data=request.data)
+        serializer = ItemBasicSerializer(item, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -129,7 +131,7 @@ class InventoryList(APIView):
     def post(self, request, format=None):
         serializer = InventorySerializer(data=request.data)
         if serializer.is_valid():
-            inv = serializer.save()
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -143,8 +145,8 @@ class InventoryDetail(APIView):
             raise Http404
 
     def get(self, request, pk, format=None):
-        Inventory = self.getInventory(pk)
-        serializer = InventorySerializer(Inventory, many=False)
+        inventory = self.getInventory(pk)
+        serializer = InventorySerializer(inventory, many=False)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
