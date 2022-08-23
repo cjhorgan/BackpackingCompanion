@@ -1,4 +1,5 @@
 class Item {
+  // ignore: non_constant_identifier_names
   int? item_id;
   final String item_name;
   final double? item_weight;
@@ -11,6 +12,7 @@ class Item {
     required this.item_name,
     required this.item_weight,
     required this.item_hiker,
+    // ignore: non_constant_identifier_names
     this.item_id,
     // required this.item_quantity,
     //
@@ -28,7 +30,7 @@ class Item {
         item_hiker: json['item_hiker']);
   }
   dynamic toJson() => {
-        'item_id': item_id,
+        'item_id': item_id.toString(),
         'item_name': item_name,
         'item_weight': item_weight,
         'item_hiker': item_hiker,

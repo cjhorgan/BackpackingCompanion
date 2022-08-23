@@ -34,7 +34,7 @@ class ItemQuantitySerializer(ModelSerializer):
 
 class InventorySerializer(ModelSerializer):
     inventory_items = ItemQuantitySerializer(source = 'itemquantity_set', many = True, read_only = True)
-    # inventory_weight = serializers.FloatField(read_only = True)
+    inventory_weight = serializers.FloatField(read_only = True)
     class Meta:
         model = Inventory
-        fields = ('inventory_name', 'inventory_items')
+        fields = '__all__'

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Inventory.dart';
-import 'trip.dart';
+
 import 'dash.dart';
 
 class FirstRoute extends StatelessWidget {
@@ -29,7 +29,7 @@ class FirstRoute extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Trip()),
+                  MaterialPageRoute(builder: (context) => Inventory()),
                 );
               }),
         ],

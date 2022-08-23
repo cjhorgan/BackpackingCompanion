@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'routes.dart';
 import 'dash.dart';
 import 'color_schemes.g.dart';
+import 'BottomTrav.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,20 +16,25 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ItemProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ItemProvider()),
+        ChangeNotifierProvider(create: (context) => TripProvider()),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-        home: HomePage(),
+        home: const BottomNav(),
       ),
     );
   }
 }
 
 class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MainScreen();
+    return const BottomNav();
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/trip.dart';
+
 import 'Inventory.dart';
 import 'color_schemes.g.dart';
+import 'tripView.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -14,42 +15,15 @@ class MainScreen extends StatelessWidget {
     Color shadowColor = Theme.of(context).colorScheme.shadow;
     return Scaffold(
       backgroundColor: background,
-      appBar: AppBar(
-        elevation: 0,
-        iconTheme: IconThemeData(color: textColor, size: 28),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search,
-              color: Colors.grey,
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.notifications,
-              color: Colors.grey,
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 5, right: 16, bottom: 5),
-            child: CircleAvatar(
-                foregroundImage: const AssetImage(
-                    "/Users/addamvictorio/development/backpackcompanion/frontend/assets/images/outline_account_circle_black_48dp.png"),
-                backgroundColor: textColor),
-          )
-        ],
-      ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
                     "Trips",
@@ -82,14 +56,15 @@ class MainScreen extends StatelessWidget {
                   ],
                   color: containerColor,
                 ),
-                padding: const EdgeInsets.all(80),
-                margin: const EdgeInsets.only(bottom: 10),
-                height: 200.0,
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.only(bottom: 20),
+                height: 150.0,
+                width: 150.0,
                 child: IconButton(
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Trip()),
+                      MaterialPageRoute(builder: (context) => TripView()),
                     );
                   },
                   icon: ImageIcon(
@@ -138,9 +113,10 @@ class MainScreen extends StatelessWidget {
                   ],
                   color: containerColor,
                 ),
-                padding: const EdgeInsets.all(80),
-                margin: const EdgeInsets.only(bottom: 10),
-                height: 200.0,
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.only(bottom: 20),
+                height: 150.0,
+                width: 150.0,
                 child: IconButton(
                   onPressed: () {
                     Navigator.push(
@@ -171,8 +147,9 @@ class MainScreen extends StatelessWidget {
                   ],
                   color: containerColor,
                 ),
-                padding: const EdgeInsets.all(80),
-                height: 200.0,
+                padding: const EdgeInsets.all(10),
+                height: 150.0,
+                width: 150.0,
                 child: IconButton(
                   onPressed: () {
                     Navigator.push(
@@ -192,15 +169,6 @@ class MainScreen extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          children: [
-            IconButton(icon: Icon(Icons.menu), onPressed: () {}),
-            Spacer(),
-            IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
-          ],
         ),
       ),
     );

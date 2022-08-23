@@ -3,7 +3,7 @@ import 'package:frontend/api/api.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'models/item.dart';
-import 'screens/addItem.dart';
+import 'package:frontend/screens/addItem.dart';
 import 'routes.dart';
 import 'color_schemes.g.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
@@ -26,20 +26,21 @@ class Inventory extends StatelessWidget {
               item_name: '$i',
             ));
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Items"),
-      ),
       // floatingActionButton: FloatingActionButton(
       //   onPressed: _incrementCounter,
       //   tooltip: 'Increment',
       //   child: const Icon(Icons.add),
       // ),
       body: ListView.builder(
+        shrinkWrap: true,
         itemCount: itemP.items.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
               trailing: IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red),
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
                   onPressed: () {
                     itemP.deleteTodo(itemP.items[index]);
                   }),
@@ -67,7 +68,7 @@ class Inventory extends StatelessWidget {
           ),
           onPressed: () {
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const AddItemScreen()));
+                MaterialPageRoute(builder: (ctx) => const AddItemScreen()));
           }),
     );
   }
@@ -78,7 +79,6 @@ class ItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemP = Provider.of<ItemProvider>(context);
     Widget titleSection = Container(
       padding: const EdgeInsets.all(32),
       child: Row(
@@ -196,9 +196,11 @@ class DetailScreen extends StatelessWidget {
         title: Text(todo.item_name),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Text(todo.item_weight.toString()),
-      ),
+          padding: const EdgeInsets.all(16.0),
+          child: Row(children: [
+            Text(todo.item_weight.toString()),
+            Text(todo.item_hiker.toString()),
+          ])),
     );
   }
 }

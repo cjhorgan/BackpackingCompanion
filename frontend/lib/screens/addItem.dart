@@ -2,7 +2,6 @@ import 'package:frontend/api/api.dart';
 import 'package:frontend/models/item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:frontend/models/item.dart';
 
 class AddItemScreen extends StatefulWidget {
   const AddItemScreen({Key? key}) : super(key: key);
@@ -26,6 +25,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
         item_weight: double.parse(desVal),
         item_hiker: int.parse(hikerVal),
       );
+      print(item);
       Provider.of<ItemProvider>(context, listen: false).addItem(item);
     }
   }
