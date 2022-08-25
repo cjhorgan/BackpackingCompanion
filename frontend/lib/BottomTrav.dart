@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/Inventory.dart';
 import 'package:frontend/home.dart';
+import 'package:frontend/layout.dart';
+import 'package:frontend/screens/profile.dart';
 import 'package:frontend/tripView.dart';
 import 'dash.dart';
 import 'color_schemes.g.dart';
@@ -34,7 +36,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
-    Home(),
+    Layout(),
     TripView(),
     Inventory(),
   ];
@@ -47,37 +49,41 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData(useMaterial3: true, colorScheme: darkColorScheme);
     Color containerColor = Theme.of(context).colorScheme.secondaryContainer;
-    Color background = Theme.of(context).colorScheme.surface;
+    // Color background = Theme.of(context).colorScheme.surface;
     Color textColor = Theme.of(context).colorScheme.onBackground;
     Color shadowColor = Theme.of(context).colorScheme.shadow;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: background,
-        shadowColor: shadowColor,
-        elevation: 0,
+        backgroundColor: darkColorScheme.background,
         iconTheme: IconThemeData(color: textColor, size: 28),
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(
+            icon: Icon(
               Icons.search,
-              color: Colors.grey,
+              color: darkColorScheme.onSurface,
             ),
           ),
           IconButton(
             onPressed: () {},
-            icon: const Icon(
+            icon: Icon(
               Icons.notifications,
-              color: Colors.grey,
+              color: darkColorScheme.onSurface,
             ),
           ),
           Container(
             margin: const EdgeInsets.only(top: 5, right: 16, bottom: 5),
-            child: CircleAvatar(
-                foregroundImage: const AssetImage(
-                    "/Users/addamvictorio/development/backpackcompanion/frontend/assets/images/outline_account_circle_black_48dp.png"),
-                backgroundColor: textColor),
+            child: IconButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Profile()));
+                },
+                icon: Icon(
+                  Icons.account_circle,
+                  color: darkColorScheme.onSurface,
+                )),
           )
         ],
       ),
@@ -85,14 +91,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: darkColorScheme.surface,
+        elevation: 15,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.forest),
+            label: 'Trip',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.landscape),
-            label: 'Trip',
+            icon: Icon(Icons.location_pin),
+            label: 'Navigation',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.backpack),
@@ -100,7 +108,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: darkColorScheme.primary,
         onTap: _onItemTapped,
       ),
     );

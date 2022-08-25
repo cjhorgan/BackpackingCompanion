@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/api/api.dart';
+import 'package:frontend/hikerList.dart';
 import 'package:provider/provider.dart';
 import 'routes.dart';
 import 'dash.dart';
@@ -17,14 +18,16 @@ class Home extends StatelessWidget {
     Color textColor = Theme.of(context).colorScheme.onSurface;
     Color shadowColor = Theme.of(context).colorScheme.shadow;
     // ··· Widget build(BuildContext context) {
-    Widget tripOverview =
-        Container(child: _buildCard("Location", 310, 110, 20, context));
+    Widget tripOverview = Container(
+        child:
+            _buildCard("Location", 310, 110, 20, context, FormWidgetsDemo()));
 
     Color color = Theme.of(context).primaryColor;
 
-    Widget packSection = _buildCard("Pack", 210, 10, 20, context);
+    Widget packSection = _buildCard("Pack", 210, 10, 20, context, HikerList());
 
-    Widget hikersSection = _buildCard("Hikers", 110, 110, 20, context);
+    Widget hikersSection =
+        _buildCard("Hikers", 110, 110, 20, context, HikerList());
 
     return Scaffold(
       backgroundColor: background,
@@ -113,10 +116,11 @@ Widget headerText(String label, double x) {
 //       ));
 }
 
-Container _buildContainer(
-    String label, double x, double height, double width, BuildContext context) {
+Container _buildContainer(String label, double x, double height, double width,
+    BuildContext context, Widget w) {
   ThemeData(useMaterial3: true, colorScheme: darkColorScheme);
   return Container(
+      margin: const EdgeInsets.only(top: 15, left: 10),
       height: height,
       width: width,
       child: Column(
@@ -131,10 +135,8 @@ Container _buildContainer(
                           color: Colors.red,
                         ),
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => FormWidgetsDemo()));
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => w));
                         }))),
             Container(
                 margin: const EdgeInsets.only(bottom: 15, left: 10),
@@ -163,8 +165,8 @@ Column _buildButtonColumn(Color color, IconData icon, String label) {
   );
 }
 
-Widget _buildCard(
-    String label, double x, double y, double size, BuildContext context) {
+Widget _buildCard(String label, double x, double y, double size,
+    BuildContext contex, Widget w) {
   ThemeData(useMaterial3: true, colorScheme: darkColorScheme);
 
   return SizedBox(
@@ -179,5 +181,5 @@ Widget _buildCard(
             ),
             borderRadius: BorderRadius.circular(0),
           ),
-          child: _buildContainer(label, size, x, y, context)));
+          child: _buildContainer(label, size, x, y, contex, w)));
 }
