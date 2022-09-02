@@ -63,6 +63,8 @@ class TripProvider with ChangeNotifier {
     return [..._trips];
   }
 
+  String error = '';
+
   void deleteTrip(Trip trip) async {
     print('The value of the input is: ${trip.trip_id}');
     final response = await http
@@ -72,6 +74,10 @@ class TripProvider with ChangeNotifier {
       _trips.remove(trip);
       notifyListeners();
     }
+  }
+
+  String getErrorMessage() {
+    return error;
   }
 
   void addTrip(Trip trip) async {
@@ -94,6 +100,8 @@ class TripProvider with ChangeNotifier {
 
   Future<String> getError(Trip trip) async {
     String n;
+    String message;
+
     print('called');
     print(jsonEncode(trip));
     print(trip.trip_plan_start_datetime);
@@ -102,13 +110,15 @@ class TripProvider with ChangeNotifier {
         headers: {"Content-Type": "application/json"}, body: json.encode(trip));
 
     if (response.statusCode == 201) {
+      error = "Good Job";
       trip.trip_id = json.decode(response.body)['trip_id'];
       _trips.add(trip);
       notifyListeners();
+    } else {
+      print(jsonEncode(trip));
+      error = json.decode(response.body)["detail"];
     }
-    print(jsonEncode(trip));
-    print("Body: " + response.body);
-    n = response.statusCode.toString();
+    n = (response.statusCode.toString());
 
     return n;
   }

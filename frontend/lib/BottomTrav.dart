@@ -11,6 +11,7 @@ import 'package:frontend/api/api.dart';
 import 'package:provider/provider.dart';
 import 'tripView.dart';
 import 'Inventory.dart';
+import 'location.dart';
 import 'home.dart';
 
 class BottomNav extends StatelessWidget {
@@ -37,7 +38,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     Layout(),
-    TripView(),
+    Location(),
     Inventory(),
   ];
 
@@ -103,7 +104,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             label: 'Navigation',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.backpack),
+            icon: Icon(Icons.inventory_2),
             label: 'Inventory',
           ),
         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/createTrip.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'Inventory.dart';
 import 'color_schemes.g.dart';
@@ -10,7 +11,10 @@ class Layout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData(useMaterial3: true, colorScheme: darkColorScheme);
+    ThemeData(
+        useMaterial3: true,
+        colorScheme: darkColorScheme,
+        textTheme: GoogleFonts.aBeeZeeTextTheme());
 
     Color containerColor = Theme.of(context).colorScheme.secondaryContainer;
     // Color background = Theme.of(context).colorScheme.background;
@@ -25,11 +29,12 @@ class Layout extends StatelessWidget {
           children: [
             Container(
                 margin: const EdgeInsets.only(top: 10, left: 25),
-                child: const Text("Current Trip",
-                    style: TextStyle(
+                child: Text("Current Trip",
+                    style: GoogleFonts.roboto(
+                        textStyle: const TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.w400,
-                    ))),
+                    )))),
             Card(
               shape: RoundedRectangleBorder(
                 side: BorderSide(
@@ -145,7 +150,7 @@ class Layout extends StatelessWidget {
 
                                     child: const Center(
                                         child: Icon(
-                                      Icons.hiking,
+                                      Icons.backpack,
                                       size: 50,
                                     )),
 
