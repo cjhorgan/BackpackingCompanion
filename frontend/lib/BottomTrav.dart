@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/Inventory.dart';
 import 'package:frontend/home.dart';
 import 'package:frontend/layout.dart';
+import 'package:frontend/screens/frontWidget.dart';
 import 'package:frontend/screens/profile.dart';
 import 'package:frontend/tripView.dart';
 import 'dash.dart';
@@ -9,6 +10,8 @@ import 'color_schemes.g.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/api/api.dart';
 import 'package:provider/provider.dart';
+import 'models/hiker.dart';
+import 'package:frontend/screens/frontWidget.dart';
 import 'tripView.dart';
 import 'Inventory.dart';
 import 'location.dart';
@@ -50,6 +53,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
+    final hikerP = Provider.of<HikerProvider>(context);
+    int? hikerID = hiker.hiker_id;
     ThemeData(useMaterial3: true, colorScheme: darkColorScheme);
     Color containerColor = Theme.of(context).colorScheme.secondaryContainer;
     // Color background = Theme.of(context).colorScheme.surface;
@@ -61,14 +67,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         iconTheme: IconThemeData(color: textColor, size: 28),
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.search,
-              color: darkColorScheme.onSurface,
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FrontWidget(
+                            hiker: hiker,
+                          ),
+                      settings: RouteSettings(arguments: hiker)));
+            },
             icon: Icon(
               Icons.notifications,
               color: darkColorScheme.onSurface,
@@ -78,8 +85,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             margin: const EdgeInsets.only(top: 5, right: 16, bottom: 5),
             child: IconButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Profile()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Profile(
+                                hiker: hiker,
+                              ),
+                          settings: RouteSettings(arguments: hiker)));
                 },
                 icon: Icon(
                   Icons.account_circle,

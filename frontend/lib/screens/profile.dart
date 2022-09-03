@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/color_schemes.g.dart';
+import 'package:frontend/hikerList.dart';
+import 'package:frontend/models/hiker.dart';
 
 class Profile extends StatelessWidget {
-  const Profile({super.key});
+  const Profile({super.key, required this.hiker});
+  final Hiker hiker;
 
   @override
   @override
@@ -47,7 +50,8 @@ class Profile extends StatelessWidget {
     ]);
   }
 
-  Widget statsBox() {
+  Widget statsBox(
+      String weight, String height, String age, String gender, String speed) {
     ThemeData(useMaterial3: true, colorScheme: darkColorScheme);
     return Card(
       elevation: 15,
@@ -70,12 +74,12 @@ class Profile extends StatelessWidget {
               const Padding(padding: EdgeInsets.only(bottom: 20)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
+                children: [
+                  const Text(
                     "Weight:",
                     style: TextStyle(fontSize: 15),
                   ),
-                  Text("hiker_physical_weight")
+                  Text(weight)
                 ],
               ),
               const Divider(
@@ -83,43 +87,37 @@ class Profile extends StatelessWidget {
                 indent: 2,
                 endIndent: 2,
               ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
-                      "Age:",
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    Text("hiker_age")
-                  ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                const Text(
+                  "Age:",
+                  style: TextStyle(fontSize: 15),
+                ),
+                Text(age)
+              ]),
               const Divider(
                 height: 20,
                 indent: 2,
                 endIndent: 2,
               ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
-                      "Gender:",
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    Text("hiker_natural_gender")
-                  ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                const Text(
+                  "Gender:",
+                  style: TextStyle(fontSize: 15),
+                ),
+                Text(gender)
+              ]),
               const Divider(
                 height: 20,
                 indent: 2,
                 endIndent: 2,
               ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
-                      "Hiker Speed:",
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    Text("hiker_avg_speed_flat")
-                  ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                const Text(
+                  "Hiker Speed:",
+                  style: TextStyle(fontSize: 15),
+                ),
+                Text(speed)
+              ]),
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [iconButton(Icons.forest, 'Trips')]),
@@ -130,11 +128,12 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
     return Scaffold(
         backgroundColor: darkColorScheme.background,
         appBar: AppBar(
-            title: const Text(
-          'Hiker Name',
+            title: Text(
+          hiker.hiker_first_name,
         )),
         body: Column(
           children: [
@@ -144,19 +143,44 @@ class Profile extends StatelessWidget {
                 child: Center(
                   child: _buildStack(),
                 )),
-            const Center(
-                child: Text("hiker_first_name + hiker_last_name",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ))),
+            Center(
+                child:
+                    Text(hiker.hiker_first_name + " " + hiker.hiker_last_name,
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: darkColorScheme.onSurface,
+                        ))),
             Container(
               margin: const EdgeInsets.only(
                   top: 10, left: 10, right: 10, bottom: 5),
               height: 400,
-              child: statsBox(),
-            )
+              child: statsBox(
+                  hiker.hiker_physical_weight.toString(),
+                  hiker.hiker_height_inch.toString(),
+                  hiker.hiker_age.toString(),
+                  hiker.hiker_natural_gender,
+                  hiker.hiker_avg_speed_flat.toString()),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom()
+                  .copyWith(elevation: ButtonStyleButton.allOrNull(10.0)),
+              onPressed: () {
+                Navigator.of(context)
+                  ..pop()
+                  ..pushReplacement(MaterialPageRoute(
+                      builder: (context) => const HikerList()));
+
+                // Pass the arguments as part of the RouteSettings. The
+                // DetailScreen reads the arguments from these settings.
+              },
+              child: Text(
+                'Sign Out',
+                style: TextStyle(
+                    color: darkColorScheme.onPrimaryContainer, fontSize: 20),
+              ),
+            ),
           ],
         ));
     throw UnimplementedError();

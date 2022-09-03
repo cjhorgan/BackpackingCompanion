@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/BottomTrav.dart';
+import 'package:frontend/models/hiker.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:frontend/api/api.dart';
 import 'package:frontend/models/trip.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_spinbox/material.dart'; // or flutter_spinbox.dart for both
 
 class HikerForm extends StatefulWidget {
   const HikerForm({Key? key}) : super(key: key);
@@ -12,10 +15,18 @@ class HikerForm extends StatefulWidget {
 }
 
 class _HikerFormState extends State<HikerForm> {
+  var weight = 0.0;
+  var avgSpeed = 0.0;
+  var height = 0.0;
+  var tripsComp = 0;
+  var age = 0;
+  var gender = "M";
   // final _formKey = GlobalKey<FormState>();
   String firstName = '';
   String description = '';
-  final tripNameController = TextEditingController();
+  final hikerFNameController = TextEditingController();
+  final hikerLNameController = TextEditingController();
+
   final tripStartDateController = TextEditingController();
   final tripEndController = TextEditingController();
   String dropdownValue = 'Male';
@@ -25,17 +36,22 @@ class _HikerFormState extends State<HikerForm> {
   bool? brushedTeeth = false;
   bool enableFeature = false;
   void onAdd() {
-    String tripNameVal = tripNameController.text;
-    final String startVal = tripStartDateController.text;
-    final String endVal = tripEndController.text;
-    if (tripNameVal.isNotEmpty) {
-      final Trip trip = Trip(
-        trip_name: tripNameVal,
-        trip_plan_end_datetime: endDate,
-        trip_plan_start_datetime: date,
+    final firstNameVal = hikerFNameController.text;
+    final lastNameVal = hikerLNameController.text;
+
+    if (firstNameVal.isNotEmpty) {
+      final Hiker hiker = Hiker(
+        hiker_first_name: firstNameVal,
+        hiker_last_name: lastNameVal,
+        hiker_physical_weight: weight,
+        hiker_height_inch: height,
+        hiker_age: age,
+        hiker_natural_gender: gender,
+        hiker_avg_speed_flat: avgSpeed,
+        hiker_trips_completed: tripsComp,
       );
-      print(trip);
-      Provider.of<TripProvider>(context, listen: false).addTrip(trip);
+
+      Provider.of<HikerProvider>(context, listen: false).addHiker(hiker);
     }
   }
 
@@ -43,7 +59,7 @@ class _HikerFormState extends State<HikerForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create a Trip'),
+        title: const Text('Create a Hiker'),
       ),
       body: Form(
         // key: _formKey,
@@ -62,7 +78,7 @@ class _HikerFormState extends State<HikerForm> {
                       ...[
                         Column(children: [
                           TextFormField(
-                            controller: tripNameController,
+                            controller: hikerFNameController,
                             decoration: const InputDecoration(
                               filled: true,
                               hintText: 'First Name...',
@@ -75,7 +91,7 @@ class _HikerFormState extends State<HikerForm> {
                             },
                           ),
                           TextFormField(
-                            controller: tripNameController,
+                            controller: hikerLNameController,
                             decoration: const InputDecoration(
                               filled: true,
                               hintText: 'Last Name...',
@@ -88,6 +104,49 @@ class _HikerFormState extends State<HikerForm> {
                             },
                           ),
                         ]),
+                        Padding(
+                          child: SpinBox(
+                            min: 1,
+                            max: 100,
+                            value: 50,
+                            decoration: const InputDecoration(
+                              hintText: 'Weight',
+                              labelText: 'Weight',
+                            ),
+                            onChanged: (value) => weight = value,
+                          ),
+                          padding: const EdgeInsets.all(16),
+                        ),
+                        SpinBox(
+                          min: 1,
+                          max: 100,
+                          value: 50,
+                          decoration: const InputDecoration(
+                            hintText: 'Age',
+                            labelText: 'Age',
+                          ),
+                          onChanged: (value) => age = value.toInt(),
+                        ),
+                        SpinBox(
+                          min: 50,
+                          max: 100,
+                          value: 50,
+                          decoration: const InputDecoration(
+                            hintText: 'Height',
+                            labelText: 'Height',
+                          ),
+                          onChanged: (value) => height = value,
+                        ),
+                        SpinBox(
+                          min: 1,
+                          max: 100,
+                          value: 50,
+                          decoration: const InputDecoration(
+                            hintText: 'Avg Speed',
+                            labelText: 'Avg Speed',
+                          ),
+                          onChanged: (value) => avgSpeed = value,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -141,7 +200,7 @@ class _HikerFormState extends State<HikerForm> {
           ),
           onPressed: () {
             onAdd();
-            Navigator.of(context).pop();
+            Navigator.pop(context);
           }),
     );
   }

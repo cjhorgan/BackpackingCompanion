@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/api/api.dart';
+import 'package:frontend/hikerList.dart';
+import 'package:frontend/screens/createHiker.dart';
 import 'package:provider/provider.dart';
 import 'routes.dart';
 import 'dash.dart';
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-        home: const BottomNav(),
+        home: const HikerList(),
       ),
     );
   }

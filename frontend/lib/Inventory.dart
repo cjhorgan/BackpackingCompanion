@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/api/api.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'models/hiker.dart';
 import 'models/item.dart';
 import 'package:frontend/screens/addItem.dart';
 import 'routes.dart';
@@ -17,11 +18,14 @@ class Inventory extends StatelessWidget {
     Color textColor = Theme.of(context).colorScheme.onSurfaceVariant;
     Color headlineColor = Theme.of(context).colorScheme.onSurface;
     final itemP = Provider.of<ItemProvider>(context);
+    final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
+    final hikerP = Provider.of<HikerProvider>(context);
+    int? hikerID = hiker.hiker_id;
     List.generate(
         20,
         (i) => Item(
               item_id: i,
-              item_hiker: i,
+              item_hiker: hikerID,
               item_weight: i.toDouble(),
               item_name: '$i',
             ));
@@ -67,8 +71,13 @@ class Inventory extends StatelessWidget {
             size: 30,
           ),
           onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (ctx) => const AddItemScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddItemScreen(
+                          hiker: hiker,
+                        ),
+                    settings: RouteSettings(arguments: hiker)));
           }),
     );
   }

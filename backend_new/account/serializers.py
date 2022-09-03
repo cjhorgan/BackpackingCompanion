@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from account.exceptions import *
 
 class HikerSerializer(ModelSerializer):
-    base_metabolic_rate = serializers.FloatField(read_only = True)
+    # base_metabolic_rate = serializers.FloatField()
 
     class Meta:
         model = Hiker

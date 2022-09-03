@@ -3,9 +3,11 @@ import 'package:frontend/models/item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AddItemScreen extends StatefulWidget {
-  const AddItemScreen({Key? key}) : super(key: key);
+import '../models/hiker.dart';
 
+class AddItemScreen extends StatefulWidget {
+  const AddItemScreen({Key? key, required this.hiker}) : super(key: key);
+  final Hiker hiker;
   @override
   _AddItemScreenState createState() => _AddItemScreenState();
 }
@@ -16,6 +18,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
   final todohikeController = TextEditingController();
 
   void onAdd() {
+    final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
+
     final String textVal = todoTitleController.text;
     final String desVal = todoDesController.text;
     final String hikerVal = todohikeController.text;
@@ -23,7 +27,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
       final Item item = Item(
         item_name: textVal,
         item_weight: double.parse(desVal),
-        item_hiker: int.parse(hikerVal),
+        item_hiker: hiker.hiker_id,
       );
       print(item);
       Provider.of<ItemProvider>(context, listen: false).addItem(item);
@@ -45,13 +49,11 @@ class _AddItemScreenState extends State<AddItemScreen> {
               TextField(
                 controller: todoDesController,
               ),
-              TextField(
-                controller: todohikeController,
-              ),
               ElevatedButton(
                   child: Text('Add'),
                   onPressed: () {
                     onAdd();
+
                     Navigator.of(context).pop();
                   })
             ],

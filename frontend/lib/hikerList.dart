@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/BottomTrav.dart';
 import 'package:frontend/api/api.dart';
+import 'package:frontend/models/hiker.dart';
+import 'package:frontend/screens/profile.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'models/item.dart';
@@ -18,54 +22,90 @@ class HikerList extends StatelessWidget {
     Color textColor = Theme.of(context).colorScheme.onSurfaceVariant;
     Color headlineColor = Theme.of(context).colorScheme.onSurface;
     final hikerP = Provider.of<HikerProvider>(context);
-    // List.generate(
-    //     20,
-    //     (i) => Item(
-    //           item_id: i,
-    //           item_hiker: i,
-    //           item_weight: i.toDouble(),
-    //           item_name: '$i',
-    //         ));
+    List.generate(
+        20,
+        (i) => Hiker(
+              hiker_id: i,
+              hiker_age: i,
+              hiker_avg_speed_flat: i.toDouble(),
+              hiker_first_name: '$i',
+              hiker_height_inch: i.toDouble(),
+              hiker_last_name: '$i',
+              hiker_natural_gender: '$i',
+              hiker_physical_weight: i.toDouble(),
+              hiker_trips_completed: i,
+            ));
     return Scaffold(
+      backgroundColor: darkColorScheme.surface,
       // floatingActionButton: FloatingActionButton(
       //   onPressed: _incrementCounter,
       //   tooltip: 'Increment',
       //   child: const Icon(Icons.add),
       // ),
       appBar: AppBar(
-        title: const Text('Create a Hiker'),
+        title: const Text('Hikers'),
       ),
-      body: ListView.builder(
-        shrinkWrap: true,
-        itemCount: hikerP.hikers.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-              trailing: IconButton(
-                  icon: const Icon(
-                    Icons.delete,
-                    color: Colors.red,
-                  ),
-                  onPressed: () {}),
-              title: Text(hikerP.hikers[index].hiker_first_name,
-                  style: TextStyle(color: headlineColor)),
-              subtitle: Text(
-                "weight: ${hikerP.hikers[index].hiker_physical_weight}",
-                style: TextStyle(fontSize: 15, color: textColor),
-              ),
-              onTap: () {
-                /* react to the tile being tapped */
-              });
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(
-            Icons.add,
-            size: 30,
-          ),
-          onPressed: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (ctx) => const HikerForm()));
-          }),
+      body: Column(children: [
+        Container(
+            child: (ListView.builder(
+          shrinkWrap: true,
+          itemCount: hikerP.hikers.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Card(
+                elevation: 10,
+                margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                color: darkColorScheme.surface,
+                child: Column(children: [
+                  ListTile(
+                      title: Text(hikerP.hikers[index].hiker_first_name,
+                          style: TextStyle(color: headlineColor)),
+                      subtitle: Text(
+                        hikerP.hikers[index].hiker_last_name,
+                        style: TextStyle(fontSize: 15, color: textColor),
+                      ),
+                      leading: IconButton(
+                          iconSize: 40,
+                          icon: const Icon(Icons.face_outlined),
+                          onPressed: () {
+                            hikerP.deleteHiker(hikerP.hikers[index]);
+                          }),
+                      onTap: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const BottomNav(),
+                                // Pass the arguments as part of the RouteSettings. The
+                                // DetailScreen reads the arguments from these settings.
+                                settings: RouteSettings(
+                                  arguments: hikerP.hikers[index],
+                                )));
+
+                        /* react to the tile being tapped */
+                      })
+                ]));
+          },
+        ))),
+        ElevatedButton(
+            style: ElevatedButton.styleFrom()
+                .copyWith(elevation: ButtonStyleButton.allOrNull(10.0)),
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (ctx) => const HikerForm()));
+            },
+            child: Icon(
+              Icons.person_add,
+              size: 50,
+            )),
+      ]),
+      // floatingActionButton: ElevatedButton(
+      //     child: const Icon(
+      //       Icons.add,
+      //       size: 50,
+      //     ),
+      //     onPressed: () {
+      //       Navigator.of(context)
+      //           .push(MaterialPageRoute(builder: (ctx) => const HikerForm()));
+      //     }),
     );
   }
 }
@@ -191,12 +231,11 @@ class DetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(todo.item_name),
       ),
-      body: Padding(
-          padding: const EdgeInsets.all(16.0),
+      body: Container(
           child: Row(children: [
-            Text(todo.item_weight.toString()),
-            Text(todo.item_hiker.toString()),
-          ])),
+        Text(todo.item_weight.toString()),
+        Text(todo.item_hiker.toString()),
+      ])),
     );
   }
 }

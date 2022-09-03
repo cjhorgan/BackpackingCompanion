@@ -156,29 +156,32 @@ class HikerProvider with ChangeNotifier {
     return [..._hikers];
   }
 
-  // void deleteTrip(Trip trip) async {
-  //   print('The value of the input is: ${trip.trip_id}');
-  //   final response = await http
-  //       .delete(Uri.parse('http://127.0.0.1:8000/trip/${trip.trip_id}/'));
+  void deleteHiker(Hiker hiker) async {
+    // print('The value of the input is: ${hiker.hiker_id}');
+    final response = await http
+        .delete(Uri.parse('http://127.0.0.1:8000/hiker/${hiker.hiker_id}/'));
 
-  //   if (response.statusCode == 204) {
-  //     _trips.remove(trip);
-  //     notifyListeners();
-  //   }
-  // }
+    if (response.statusCode == 204) {
+      _hikers.remove(hiker);
+      notifyListeners();
+    }
+  }
 
-  // void addTrip(Trip trip) async {
-  //   print('called');
-  //   print(trip);
-  //   final response = await http.post(Uri.parse('http://127.0.0.1:8000/trip/'),
-  //       headers: {"Content-Type": "application/json"}, body: json.encode(trip));
+  void addHiker(Hiker hiker) async {
+    print('called');
+    print(hiker);
+    print('called');
+    print(jsonEncode(hiker));
+    final response = await http.post(Uri.parse('http://127.0.0.1:8000/hiker/'),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(hiker));
 
-  //   if (response.statusCode == 201) {
-  //     trip.trip_id = json.decode(response.body)['trip_id'];
-  //     _trips.add(trip);
-  //     notifyListeners();
-  //   }
-  // }
+    if (response.statusCode == 201) {
+      hiker.hiker_id = json.decode(response.body)['hiker_id'];
+      _hikers.add(hiker);
+      notifyListeners();
+    }
+  }
 
   // void deleteTodo(Item item) async {
   //   print('The value of the input is: ${item.item_id}');

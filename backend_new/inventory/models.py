@@ -53,7 +53,7 @@ class Item(models.Model):
     )
     item_hiker = models.ForeignKey(
         'account.Hiker', 
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         blank = True,
         null = True,
     )

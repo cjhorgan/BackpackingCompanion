@@ -1,4 +1,6 @@
-class Hiker {
+import 'package:flutter/material.dart';
+
+class Hiker with ChangeNotifier {
   // ignore: non_constant_identifier_names
   int? hiker_id;
   final String hiker_first_name;
@@ -13,20 +15,22 @@ class Hiker {
   // final int Hiker_quantity;
   // final String Hiker_description;
 
-  Hiker(
-      {required this.hiker_first_name,
-      required this.hiker_last_name,
-      required this.hiker_physical_weight,
-      required this.hiker_age,
-      required this.hiker_height_inch,
-      required this.hiker_natural_gender,
-      required this.hiker_avg_speed_flat,
-      required this.hiker_trips_completed,
-      this.hiker_id
-      // required this.Hiker_quantity,
-      //
-      // required this.Hiker_description
-      });
+  Hiker({
+    this.hiker_id,
+    required this.hiker_first_name,
+    required this.hiker_last_name,
+    required this.hiker_physical_weight,
+    required this.hiker_age,
+    required this.hiker_height_inch,
+    required this.hiker_natural_gender,
+    required this.hiker_avg_speed_flat,
+    required this.hiker_trips_completed,
+    // ignore: non_constant_identifier_names
+
+    // required this.Hiker_quantity,
+    //
+    // required this.Hiker_description
+  });
 
   factory Hiker.fromJson(Map<String, dynamic> json) {
     return Hiker(
@@ -46,12 +50,13 @@ class Hiker {
   }
   dynamic toJson() => {
         'hiker_id': hiker_id.toString(),
-        'hiker_age': hiker_age,
-        'hiker_avg_speed_flat': hiker_avg_speed_flat,
         'hiker_first_name': hiker_first_name,
+        'hiker_last_name': hiker_last_name,
+        'hiker_physical_weight': hiker_physical_weight,
+        'hiker_age': hiker_age,
         'hiker_height_inch': hiker_height_inch,
         'hiker_natural_gender': hiker_natural_gender,
+        'hiker_avg_speed_flat': hiker_avg_speed_flat,
         'hiker_trips_completed': hiker_trips_completed,
-        'hiker_physical_weight': hiker_physical_weight
       };
 }
