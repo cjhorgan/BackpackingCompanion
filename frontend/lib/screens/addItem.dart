@@ -28,6 +28,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
         item_name: textVal,
         item_weight: double.parse(desVal),
         item_hiker: hiker.hiker_id,
+        isEssential: false,
+        isFavorite: false,
+        item_description: '',
       );
       print(item);
       Provider.of<ItemProvider>(context, listen: false).addItem(item);

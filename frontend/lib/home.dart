@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/api/api.dart';
 import 'package:frontend/hikerList.dart';
 import 'package:provider/provider.dart';
-import 'routes.dart';
-import 'dash.dart';
+
 import 'color_schemes.g.dart';
 import 'BottomTrav.dart';
 import 'screens/createTrip.dart';

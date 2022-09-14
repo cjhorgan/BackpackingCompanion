@@ -146,10 +146,10 @@ class Profile extends StatelessWidget {
             Center(
                 child:
                     Text(hiker.hiker_first_name + " " + hiker.hiker_last_name,
-                        style: TextStyle(
-                          fontSize: 25,
+                        style: const TextStyle(
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: darkColorScheme.onSurface,
+                          color: Colors.white,
                         ))),
             Container(
               margin: const EdgeInsets.only(

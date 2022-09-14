@@ -80,6 +80,39 @@ class TripProvider with ChangeNotifier {
     return error;
   }
 
+  Future<Trip> updateTrip(int? i, Trip trip) async {
+    List<dynamic>? p = trip.trip_hikers;
+
+    p?.add(i);
+
+    final response =
+        await http.put(Uri.parse('http://127.0.0.1:8000/trip/${trip.trip_id}/'),
+            headers: <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode({
+              'trip_hikers': p,
+              'trip_name': trip.trip_name,
+              'trip_plan_start_datetime':
+                  trip.trip_plan_start_datetime.toString(),
+              'trip_plan_end_datetime': trip.trip_plan_end_datetime.toString()
+            }));
+    if (response.statusCode == 201) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      notifyListeners();
+      return Trip.fromJson(jsonDecode(response.body));
+    } else {
+      print(jsonEncode(trip));
+      print("Body: " + response.body);
+      print("Code: " + response.statusCode.toString());
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      notifyListeners();
+      throw Exception('Failed to update album.');
+    }
+  }
+
   void addTrip(Trip trip) async {
     print('called');
     print(jsonEncode(trip));
@@ -140,6 +173,169 @@ class TripProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body) as List;
       _trips = data.map<Trip>((json) => Trip.fromJson(json)).toList();
+      notifyListeners();
+    }
+  }
+}
+
+class FoodItemProvider extends ChangeNotifier {
+  FoodItemProvider() {
+    fetchFoodItems();
+    notifyListeners();
+  }
+  List<FoodItem> _fooditems = [];
+
+  List<FoodItem> get fooditems {
+    return [..._fooditems];
+  }
+
+  void addFoodItem(FoodItem fooditem) async {
+    print(jsonEncode(fooditem));
+
+    final response = await http.post(
+        Uri.parse('http://127.0.0.1:8000/fooditem/'),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(fooditem));
+    print(response.body);
+    if (response.statusCode == 201) {
+      fooditem.item_id = json.decode(response.body)['item_id'];
+      _fooditems.add(fooditem);
+      notifyListeners();
+    }
+  }
+
+  void deleteTodo(FoodItem fooditem) async {
+    print('The value of the input is: ${fooditem.item_id}');
+    final response = await http.delete(
+        Uri.parse('http://127.0.0.1:8000/fooditem/${fooditem.item_id}'));
+
+    if (response.statusCode == 204) {
+      _fooditems.remove(fooditem);
+      notifyListeners();
+    }
+  }
+
+  fetchFoodItems() async {
+    const url = 'http://127.0.0.1:8000/fooditem/?format=json';
+    // ignore: unused_local_variable
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body) as List;
+      _fooditems =
+          data.map<FoodItem>((json) => FoodItem.fromJson(json)).toList();
+      notifyListeners();
+    }
+  }
+}
+
+class ItemQuantityProvider extends ChangeNotifier {
+  ItemQuantityProvider() {
+    fetchItemQuantitys();
+    notifyListeners();
+  }
+  List<ItemQuantity> _itemquantitys = [];
+
+  List<ItemQuantity> get itemquantitys {
+    return [..._itemquantitys];
+  }
+
+  void addItemQuantity(ItemQuantity itemquantity) async {
+    print(jsonEncode(itemquantity));
+
+    final response = await http.post(
+        Uri.parse('http://127.0.0.1:8000/itemquantity/'),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(itemquantity));
+    print(response.body);
+    if (response.statusCode == 201) {
+      itemquantity.id = json.decode(response.body)['id'];
+      _itemquantitys.add(itemquantity);
+      notifyListeners();
+    }
+  }
+
+  void deleteTodo(ItemQuantity itemquantity) async {
+    print('The value of the input is: ${itemquantity.id}');
+    final response = await http.delete(
+        Uri.parse('http://127.0.0.1:8000/itemquantity/${itemquantity.id}'));
+
+    if (response.statusCode == 204) {
+      _itemquantitys.remove(itemquantity);
+      notifyListeners();
+    }
+  }
+
+  fetchItemQuantitys() async {
+    const url = 'http://127.0.0.1:8000/itemquantity/?format=json';
+    // ignore: unused_local_variable
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body) as List;
+      _itemquantitys = data
+          .map<ItemQuantity>((json) => ItemQuantity.fromJson(json))
+          .toList();
+      notifyListeners();
+    }
+  }
+}
+
+class InventoryProvider extends ChangeNotifier {
+  InventoryProvider() {
+    fetchTasksInventory();
+    notifyListeners();
+  }
+  List<Inventory> _inventorys = [];
+
+  List<Inventory> get inventorys {
+    return [..._inventorys];
+  }
+
+  void deleteMealSchedule(Inventory inventory) async {
+    // print('The value of the input is: ${hiker.hiker_id}');
+    final response = await http.delete(Uri.parse(
+        'http://127.0.0.1:8000/inventory/${inventory.inventory_id}/'));
+
+    if (response.statusCode == 204) {
+      _inventorys.remove(inventory);
+      notifyListeners();
+    }
+  }
+
+  void addInventory(Inventory inventory) async {
+    print('called');
+    print(inventory);
+    print('called');
+    print(jsonEncode(inventory));
+    final response = await http.post(
+        Uri.parse('http://127.0.0.1:8000/inventory/'),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(inventory));
+
+    if (response.statusCode == 201) {
+      inventory.inventory_id = json.decode(response.body)['inventory_id'];
+      _inventorys.add(inventory);
+      notifyListeners();
+    }
+  }
+
+  // void deleteTodo(Item item) async {
+  //   print('The value of the input is: ${item.item_id}');
+  //   final response = await http
+  //       .delete(Uri.parse('http://127.0.0.1:8000/item/${item.item_id}'));
+
+  //   if (response.statusCode == 204) {
+  //     _items.remove(item);
+  //     notifyListeners();
+  //   }
+
+  fetchTasksInventory() async {
+    const url = 'http://127.0.0.1:8000/inventory/?format=json';
+    // ignore: unused_local_variable
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body) as List;
+      _inventorys =
+          data.map<Inventory>((json) => Inventory.fromJson(json)).toList();
       notifyListeners();
     }
   }

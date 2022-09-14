@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:frontend/Inventory.dart';
 import 'package:frontend/home.dart';
 import 'package:frontend/layout.dart';
-import 'package:frontend/screens/frontWidget.dart';
 import 'package:frontend/screens/profile.dart';
 import 'package:frontend/tripView.dart';
-import 'dash.dart';
 import 'color_schemes.g.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/api/api.dart';
 import 'package:provider/provider.dart';
 import 'models/hiker.dart';
-import 'package:frontend/screens/frontWidget.dart';
 import 'tripView.dart';
 import 'Inventory.dart';
 import 'location.dart';
 import 'home.dart';
+import 'package:frontend/models/trip.dart';
 
 class BottomNav extends StatelessWidget {
-  const BottomNav({Key? key}) : super(key: key);
+  const BottomNav({Key? key, this.hiker, this.trip}) : super(key: key);
+  final Hiker? hiker;
+  final Trip? trip;
 
   static const String _title = 'Flutter Code Sample';
 
@@ -37,6 +37,7 @@ class MyStatefulWidget extends StatefulWidget {
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
+
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
@@ -46,7 +47,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   ];
 
   void _onItemTapped(int index) {
+    final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
+
     setState(() {
+      (context) => Layout(hiker: hiker);
       _selectedIndex = index;
     });
   }
@@ -54,6 +58,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
+    // final trip = ModalRoute.of(context)!.settings.arguments as Trip;
+
+    Layout(
+      hiker: hiker,
+    );
     final hikerP = Provider.of<HikerProvider>(context);
     int? hikerID = hiker.hiker_id;
     ThemeData(useMaterial3: true, colorScheme: darkColorScheme);
@@ -67,15 +76,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         iconTheme: IconThemeData(color: textColor, size: 28),
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => FrontWidget(
-                            hiker: hiker,
-                          ),
-                      settings: RouteSettings(arguments: hiker)));
-            },
+            onPressed: () {},
             icon: Icon(
               Icons.notifications,
               color: darkColorScheme.onSurface,

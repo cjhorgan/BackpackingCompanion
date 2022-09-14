@@ -1,15 +1,23 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:frontend/BottomTrav.dart';
 import 'package:frontend/color_schemes.g.dart';
 import 'package:frontend/layout.dart';
+import 'package:frontend/screens/assignHikers.dart';
+import 'package:frontend/tripView.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:frontend/api/api.dart';
 import 'package:frontend/models/trip.dart';
 import 'package:provider/provider.dart';
 
-class FormWidgetsDemo extends StatefulWidget {
-  const FormWidgetsDemo({Key? key}) : super(key: key);
+import '../models/hiker.dart';
 
+class FormWidgetsDemo extends StatefulWidget {
+  const FormWidgetsDemo({Key? key, this.trip, this.hiker}) : super(key: key);
+  final Hiker? hiker;
+
+  final Trip? trip;
   @override
   _FormWidgetsDemoState createState() => _FormWidgetsDemoState();
 }
@@ -27,6 +35,7 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
 
   DateTime date = DateTime.now();
   DateTime endDate = DateTime.now();
+  List<dynamic>? hikers = [];
 
   TimeOfDay tEnd = TimeOfDay.now();
   double maxValue = 0;
@@ -41,18 +50,23 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
     date = applied(date, t);
     endDate = applied(endDate, tEnd);
     Future<String> error;
-
     String tripNameVal = tripNameController.text;
     final String startVal = tripStartDateController.text;
+
     final String endVal = tripEndController.text;
+    final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
+
     if (tripNameVal.isNotEmpty) {
       final Trip trip = Trip(
-        trip_name: tripNameVal,
-        trip_plan_start_datetime: date,
-        trip_plan_end_datetime: endDate,
-      );
+          trip_name: tripNameVal,
+          trip_plan_start_datetime: date,
+          trip_plan_end_datetime: endDate,
+          trip_hikers: hikers);
 
       error = Provider.of<TripProvider>(context, listen: false).getError(trip);
+
+      // trip.trip_hikers = hikers;
+
       final arr = error.toString().split('=');
 
       print(trip);
@@ -68,8 +82,17 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
         print("error!");
         print(await error);
       } else {
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AssignHikers(
+                      trip: trip,
+                    ),
+                settings: RouteSettings(arguments: trip)));
         // Provider.of<TripProvider>(context, listen: false).addTrip(trip);
-        Navigator.of(context).pop();
+
+        debugPrint('Card tapped.');
       }
 
       // Provider.of<TripProvider>(context, listen: false).addTrip(trip);
@@ -77,6 +100,9 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
   }
 
   Future<void> _showMyDialog(String s) async {
+    final trip = ModalRoute.of(context)!.settings.arguments as Trip;
+    final tripP = Provider.of<HikerProvider>(context);
+    int? tripID = trip.trip_id;
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -101,7 +127,14 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MyStatefulWidget()));
+                          builder: (context) => BottomNav(
+                                trip: trip,
+                              ),
+                          settings: RouteSettings(arguments: trip)));
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => MyStatefulWidget()));
                 }
               },
             ),
@@ -113,6 +146,9 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
 
   @override
   Widget build(BuildContext context) {
+    final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
+    final tripP = Provider.of<TripProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create a Trip'),
@@ -133,7 +169,7 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
                     children: [
                       ...[
                         Text(
-                          "Plan Your Trip!",
+                          hikers.toString(),
                           style: TextStyle(
                             fontSize: 40,
                             color: Colors.grey[300],
@@ -185,6 +221,11 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
                                 tEnd = v;
                               });
                             }),
+                        IconButton(
+                            onPressed: () {
+                              onAdd();
+                            },
+                            icon: const Icon(Icons.person_outline_outlined))
                       ].expand(
                         (widget) => [
                           widget,
@@ -207,7 +248,7 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
             size: 30,
           ),
           onPressed: () {
-            onAdd();
+            Navigator.of(context).pop();
           }),
     );
   }
@@ -303,7 +344,7 @@ class _FormDatePickerState extends State<_FormDatePicker> {
                             },
                           ),
                           Container(
-                            width: 90,
+                            width: 70,
                           ),
                           Text(
                             intl.DateFormat('yMd').format(widget.date),
@@ -342,7 +383,7 @@ class _FormDatePickerState extends State<_FormDatePicker> {
                             },
                           ),
                           Container(
-                            width: 90,
+                            width: 70,
                           ),
                           Text(
                             widget.t.format(context),

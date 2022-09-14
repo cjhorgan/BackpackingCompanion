@@ -23,10 +23,11 @@ class _LocationState extends State<Location> {
         body: SingleChildScrollView(
             child: Container(
                 width: double.infinity,
+                height: 600,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image:
-                        NetworkImage("https://goo.gl/maps/piYutJ1odjW8SpQf8"),
+                    image: NetworkImage(
+                        'https://media.wired.com/photos/59269cd37034dc5f91bec0f1/191:100/w_1280,c_limit/GoogleMapTA.jpg'),
                     fit: BoxFit.cover,
                   ),
                 ))));

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:frontend/api/api.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'routes.dart';
 import 'models/trip.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 
 class TripView extends StatelessWidget {
-  const TripView({super.key});
+  const TripView({super.key, required Trip trip});
 
   @override
   @override
   Widget build(BuildContext context) {
+    final trip = ModalRoute.of(context)!.settings.arguments as Trip;
     Color textColor = Theme.of(context).colorScheme.onSurfaceVariant;
     Color headlineColor = Theme.of(context).colorScheme.onSurface;
     final tripP = Provider.of<TripProvider>(context);
@@ -43,7 +43,7 @@ class TripView extends StatelessWidget {
                   onPressed: () {
                     tripP.deleteTrip(tripP.trips[index]);
                   }),
-              title: Text(tripP.trips[index].trip_name,
+              title: Text(trip.trip_id.toString(),
                   style: TextStyle(color: headlineColor)),
               subtitle: Text(
                 "date: ${tripP.trips[index].trip_plan_start_datetime}",

@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/api/api.dart';
+import 'package:frontend/mealplan.dart';
+import 'package:frontend/models/hiker.dart';
+import 'package:frontend/models/trip.dart';
 import 'package:frontend/screens/createTrip.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:frontend/mealplan.dart';
+import 'package:provider/provider.dart';
 import 'Inventory.dart';
 import 'color_schemes.g.dart';
 import 'tripView.dart';
 
 class Layout extends StatelessWidget {
-  const Layout({Key? key}) : super(key: key);
+  const Layout({Key? key, this.hiker, this.trip}) : super(key: key);
+  final Hiker? hiker;
+  final Trip? trip;
+
+  void isNull(Trip t) {}
 
   @override
   Widget build(BuildContext context) {
+    String s = ' ';
+    final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
+    final tripP = Provider.of<TripProvider>(context);
+
     ThemeData(
         useMaterial3: true,
         colorScheme: darkColorScheme,
@@ -28,13 +41,20 @@ class Layout extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-                margin: const EdgeInsets.only(top: 10, left: 25),
-                child: Text("Current Trip",
-                    style: GoogleFonts.roboto(
-                        textStyle: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w400,
-                    )))),
+              margin: const EdgeInsets.only(top: 10, left: 25),
+              child: Text(
+                  style: GoogleFonts.roboto(
+                      textStyle: const TextStyle(
+                          fontSize: 30, fontWeight: FontWeight.w400)), (() {
+                if (trip == null) {
+                  s = 'Create a trip';
+                  return s;
+                } else {
+                  s = trip!.trip_name;
+                  return s;
+                }
+              })()),
+            ),
             Card(
               shape: RoundedRectangleBorder(
                 side: BorderSide(
@@ -51,16 +71,20 @@ class Layout extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => FormWidgetsDemo()));
+                            builder: (context) => FormWidgetsDemo(
+                                  trip: trip,
+                                ),
+                            settings: RouteSettings(arguments: hiker)));
                     debugPrint('Card tapped.');
                   },
                   child: Container(
+                    padding: EdgeInsets.all(20),
                     height: 200,
                     width: double.infinity,
                     child: const Center(
-                        child: Icon(
-                      Icons.hiking,
-                      size: 50,
+                        child: Image(
+                      image: NetworkImage(
+                          'https://media.wired.com/photos/59269cd37034dc5f91bec0f1/191:100/w_1280,c_limit/GoogleMapTA.jpg'),
                     )),
 
                     // child: Row(
@@ -182,20 +206,30 @@ class Layout extends StatelessWidget {
                               shadowColor: darkColorScheme.shadow,
                               margin: const EdgeInsets.only(
                                   left: 20, right: 20, bottom: 5),
-                              child: Container(
-                                height: 150,
+                              child: InkWell(
+                                  splashColor: Colors.blue.withAlpha(50),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                (MealPlanScreen())));
+                                    debugPrint('Card tapped.');
+                                  },
+                                  child: Container(
+                                    height: 150,
 
-                                child: const Center(
-                                    child: Icon(
-                                  Icons.local_dining,
-                                  size: 50,
-                                )),
+                                    child: const Center(
+                                        child: Icon(
+                                      Icons.local_dining,
+                                      size: 50,
+                                    )),
 
-                                // child: Row(
-                                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //     crossAxisAlignment: CrossAxisAlignment.start,
-                                //     children: const [Text('1'), Text('2')])),
-                              ))
+                                    // child: Row(
+                                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                                    //     children: const [Text('1'), Text('2')])),
+                                  )))
                         ]),
                       ),
                     ])),

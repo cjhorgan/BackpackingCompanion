@@ -9,4 +9,6 @@ urlpatterns = [
     path('mealplan/<int:pk>/', views.MealPlanDetail.as_view()),
     path('mealschedule/', views.MealScheduleList.as_view()),
     path('mealschedule/<int:pk>/', views.MealScheduleDetail.as_view()),
+    path('mealday/', views.MealDayList.as_view()),
+    path('mealday/<int:pk>/', views.MealDayDetail.as_view()),
 ]

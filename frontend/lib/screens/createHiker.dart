@@ -29,6 +29,7 @@ class _HikerFormState extends State<HikerForm> {
 
   final tripStartDateController = TextEditingController();
   final tripEndController = TextEditingController();
+
   String dropdownValue = 'Male';
   DateTime date = DateTime.now();
   DateTime endDate = DateTime.now();

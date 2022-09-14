@@ -8,8 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'models/item.dart';
 import 'package:frontend/screens/addItem.dart';
+import 'package:frontend/models/trip.dart';
 import 'screens/createHiker.dart';
-import 'routes.dart';
+
 import 'color_schemes.g.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 
@@ -22,6 +23,7 @@ class HikerList extends StatelessWidget {
     Color textColor = Theme.of(context).colorScheme.onSurfaceVariant;
     Color headlineColor = Theme.of(context).colorScheme.onSurface;
     final hikerP = Provider.of<HikerProvider>(context);
+    final tripP = Provider.of<TripProvider>(context);
     List.generate(
         20,
         (i) => Hiker(
@@ -47,6 +49,9 @@ class HikerList extends StatelessWidget {
       ),
       body: Column(children: [
         Container(
+          height: 10,
+        ),
+        Container(
             child: (ListView.builder(
           shrinkWrap: true,
           itemCount: hikerP.hikers.length,
@@ -65,7 +70,7 @@ class HikerList extends StatelessWidget {
                       ),
                       leading: IconButton(
                           iconSize: 40,
-                          icon: const Icon(Icons.face_outlined),
+                          icon: const Icon(Icons.person_outline_outlined),
                           onPressed: () {
                             hikerP.deleteHiker(hikerP.hikers[index]);
                           }),
@@ -73,8 +78,9 @@ class HikerList extends StatelessWidget {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const BottomNav(),
-                                // Pass the arguments as part of the RouteSettings. The
+                                builder: (context) => BottomNav(
+                                      hiker: hikerP.hikers[index],
+                                    ), // Pass the arguments as part of the RouteSettings. The
                                 // DetailScreen reads the arguments from these settings.
                                 settings: RouteSettings(
                                   arguments: hikerP.hikers[index],
@@ -89,12 +95,13 @@ class HikerList extends StatelessWidget {
             style: ElevatedButton.styleFrom()
                 .copyWith(elevation: ButtonStyleButton.allOrNull(10.0)),
             onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (ctx) => const HikerForm()));
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const HikerForm()));
             },
             child: Icon(
               Icons.person_add,
               size: 50,
+              color: darkColorScheme.onSurfaceVariant,
             )),
       ]),
       // floatingActionButton: ElevatedButton(

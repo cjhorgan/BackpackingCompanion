@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'models/hiker.dart';
 import 'models/item.dart';
 import 'package:frontend/screens/addItem.dart';
-import 'routes.dart';
+
 import 'color_schemes.g.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 
@@ -28,6 +28,9 @@ class Inventory extends StatelessWidget {
               item_hiker: hikerID,
               item_weight: i.toDouble(),
               item_name: '$i',
+              isEssential: true,
+              isFavorite: false,
+              item_description: '',
             ));
     return Scaffold(
       // floatingActionButton: FloatingActionButton(

@@ -2,9 +2,9 @@ from django.http import Http404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
-from .serializers import MealSerializer, MealPlanSerializer, MealScheduleSerializer
-from .models import Meal, MealPlan, MealSchedule
+from rest_framework import status, generics
+from .serializers import MealDaySerializer, MealSerializer, MealPlanSerializer, MealScheduleSerializer
+from .models import Meal, MealPlan, MealSchedule, MealDay
 
 @api_view(['Get'])
 def get_routes(request):
@@ -170,3 +170,10 @@ class MealScheduleDetail(APIView):
         item = self.getMealSchedule(pk)
         item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+class MealDayList(generics.ListCreateAPIView):
+    queryset = MealDay.objects.all()
+    serializer_class = MealDaySerializer
+
+class MealDayDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MealDay.objects.all()
+    serializer_class = MealDaySerializer
