@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/api/MealPlanProviders.dart';
 import 'package:frontend/api/api.dart';
 import 'package:frontend/hikerList.dart';
+import 'package:frontend/home.dart';
 import 'package:frontend/screens/createHiker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';

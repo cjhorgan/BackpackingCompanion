@@ -3,13 +3,14 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:frontend/BottomTrav.dart';
 import 'package:frontend/color_schemes.g.dart';
+import 'package:frontend/hikerList.dart';
 import 'package:frontend/layout.dart';
-import 'package:frontend/screens/assignHikers.dart';
 import 'package:frontend/tripView.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:frontend/api/api.dart';
 import 'package:frontend/models/trip.dart';
 import 'package:provider/provider.dart';
+import 'package:frontend/globals.dart' as globals;
 
 import '../models/hiker.dart';
 
@@ -25,21 +26,28 @@ class FormWidgetsDemo extends StatefulWidget {
 class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
   // final _formKey = GlobalKey<FormState>();
   String title = '';
+  bool validTrip = false;
   bool isError = false;
+  bool test = false;
+  List<dynamic>? getHikers = [];
+
+  final List<String> _filters = <String>[];
+
   String description = '';
   final tripNameController = TextEditingController();
   final tripStartDateController = TextEditingController();
   final tripEndController = TextEditingController();
+  List<bool> selected = List.generate(20, (index) => false);
 
   TimeOfDay t = TimeOfDay.now();
 
   DateTime date = DateTime.now();
   DateTime endDate = DateTime.now();
-  List<dynamic>? hikers = [];
 
   TimeOfDay tEnd = TimeOfDay.now();
   double maxValue = 0;
   bool? brushedTeeth = false;
+
   bool enableFeature = false;
 
   DateTime applied(DateTime dt, TimeOfDay time) {
@@ -61,7 +69,7 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
           trip_name: tripNameVal,
           trip_plan_start_datetime: date,
           trip_plan_end_datetime: endDate,
-          trip_hikers: hikers);
+          trip_hikers: getHikers);
 
       error = Provider.of<TripProvider>(context, listen: false).getError(trip);
 
@@ -82,11 +90,14 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
         print("error!");
         print(await error);
       } else {
+        globals.activeTrip = true;
+        globals.tripID = trip.trip_id;
+
         // ignore: use_build_context_synchronously
-        Navigator.push(
+        Navigator.pop(
             context,
             MaterialPageRoute(
-                builder: (context) => AssignHikers(
+                builder: (context) => BottomNav(
                       trip: trip,
                     ),
                 settings: RouteSettings(arguments: trip)));
@@ -100,9 +111,6 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
   }
 
   Future<void> _showMyDialog(String s) async {
-    final trip = ModalRoute.of(context)!.settings.arguments as Trip;
-    final tripP = Provider.of<HikerProvider>(context);
-    int? tripID = trip.trip_id;
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -124,13 +132,7 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
                 if (isError) {
                   Navigator.of(context).pop();
                 } else {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BottomNav(
-                                trip: trip,
-                              ),
-                          settings: RouteSettings(arguments: trip)));
+                  Navigator.of(context).pop();
                   // Navigator.push(
                   //     context,
                   //     MaterialPageRoute(
@@ -144,11 +146,85 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
     );
   }
 
+  // Iterable<Widget> get actorWidgets {
+  //   return _cast.map((ActorFilterEntry actor) {
+  //     return Padding(
+  //       padding: const EdgeInsets.all(4.0),
+  //       child: FilterChip(
+  //         avatar: CircleAvatar(child: Text(actor.initials)),
+  //         label: Text(actor.name),
+  //         selected: _filters.contains(actor.name),
+  //         onSelected: (bool value) {
+  //           setState(() {
+  //             if (value) {
+  //               _filters.add(actor.name);
+  //             } else {
+  //               _filters.removeWhere((String name) {
+  //                 return name == actor.name;
+  //               });
+  //             }
+  //           });
+  //         },
+  //       ),
+  //     );
+  //   });
+  // }
+
+  Iterable<Widget> get actorWidgets {
+    final hikerP = Provider.of<HikerProvider>(context);
+    final List<Hiker> _cast = List.generate(
+        hikerP.hikers.length,
+        (i) => Hiker(
+              hiker_id: hikerP.hikers[i].hiker_id,
+              hiker_age: hikerP.hikers[i].hiker_age,
+              hiker_avg_speed_flat: hikerP.hikers[i].hiker_avg_speed_flat,
+              hiker_first_name: hikerP.hikers[i].hiker_first_name,
+              hiker_height_inch: i.toDouble(),
+              hiker_last_name: hikerP.hikers[i].hiker_last_name,
+              hiker_natural_gender: '$i',
+              hiker_physical_weight: i.toDouble(),
+              hiker_trips_completed: i,
+            ));
+    List<int?> hikerTrip = [];
+
+    final tripP = Provider.of<TripProvider>(context);
+
+    return _cast.map((Hiker hiker) {
+      return Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: FilterChip(
+          elevation: 10,
+          avatar: CircleAvatar(
+              child:
+                  Text(hiker.hiker_first_name[0] + hiker.hiker_last_name[0])),
+          label: Text(hiker.hiker_first_name),
+          selected: _filters.contains(hiker.hiker_first_name),
+          selectedColor: darkColorScheme.primary,
+          checkmarkColor: Color.fromARGB(0, 255, 86, 34),
+          showCheckmark: false,
+          onSelected: (bool value) {
+            setState(() {
+              if (value) {
+                _filters.add(hiker.hiker_first_name);
+                getHikers?.add(hiker.hiker_id);
+              } else {
+                _filters.removeWhere((String name) {
+                  return name == hiker.hiker_first_name;
+                });
+              }
+            });
+          },
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
     final tripP = Provider.of<TripProvider>(context);
 
+    ThemeData(useMaterial3: true, colorScheme: darkColorScheme);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create a Trip'),
@@ -165,11 +241,12 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
                   constraints: const BoxConstraints(maxWidth: double.infinity),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ...[
                         Text(
-                          hikers.toString(),
+                          "Plan Your Trip",
                           style: TextStyle(
                             fontSize: 40,
                             color: Colors.grey[300],
@@ -186,6 +263,7 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
                               ),
                               onChanged: (value) {
                                 setState(() {
+                                  validTrip = true;
                                   title = value;
                                 });
                               },
@@ -221,16 +299,57 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
                                 tEnd = v;
                               });
                             }),
-                        IconButton(
-                            onPressed: () {
-                              onAdd();
-                            },
-                            icon: const Icon(Icons.person_outline_outlined))
+                        // FilterChip(
+                        //   avatar: CircleAvatar(child: Text("name")),
+                        //   label: Text("name"),
+                        //   selected: _filters.contains(actor.name),
+                        //   onSelected: (bool value) {
+                        //     setState(() {
+                        //       if (value) {
+                        //         _filters.add(actor.name);
+                        //       } else {
+                        //         _filters.removeWhere((String name) {
+                        //           return name == actor.name;
+                        //         });
+                        //       }
+                        //     });
+                        //   },
+                        // ),
+
+                        Divider(
+                          height: 10,
+                        ),
+                        Card(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                color: Theme.of(context).colorScheme.outline,
+                              ),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(12)),
+                            ),
+                            elevation: 10,
+                            child: Container(
+                                width: double.infinity,
+                                child: Column(children: [
+                                  Text("Choose Hikers",
+                                      style: TextStyle(
+                                          fontSize: 30,
+                                          color: Colors.grey[300])),
+                                  Wrap(
+                                    children: actorWidgets.toList(),
+                                  ),
+                                ]))),
+
+                        // IconButton(
+                        //     onPressed: () {
+                        //       onAdd();
+                        //     },
+                        // icon: const Icon(Icons.person_outline_outlined))
                       ].expand(
                         (widget) => [
                           widget,
                           const SizedBox(
-                            height: 20,
+                            height: 10,
                           )
                         ],
                       )
@@ -243,12 +362,23 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+          elevation: 20,
           child: const Icon(
             Icons.add,
             size: 30,
           ),
           onPressed: () {
-            Navigator.of(context).pop();
+            setState(() {
+              globals.activeTrip == true;
+              globals.trip_hikers == getHikers;
+            });
+            if (validTrip) {
+              onAdd();
+            } else {
+              _showMyDialog("poi");
+            }
+
+            // Navigator.of(context).pop();
           }),
     );
   }

@@ -24,6 +24,7 @@ class HikerList extends StatelessWidget {
     Color headlineColor = Theme.of(context).colorScheme.onSurface;
     final hikerP = Provider.of<HikerProvider>(context);
     final tripP = Provider.of<TripProvider>(context);
+
     List.generate(
         20,
         (i) => Hiker(

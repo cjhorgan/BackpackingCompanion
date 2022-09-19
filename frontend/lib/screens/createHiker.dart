@@ -77,46 +77,41 @@ class _HikerFormState extends State<HikerForm> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       ...[
-                        Column(children: [
-                          TextFormField(
-                            controller: hikerFNameController,
-                            decoration: const InputDecoration(
-                              filled: true,
-                              hintText: 'First Name...',
-                              labelText: 'First Name',
-                            ),
-                            onChanged: (value) {
-                              setState(() {
-                                firstName = value;
-                              });
-                            },
+                        TextFormField(
+                          controller: hikerFNameController,
+                          decoration: const InputDecoration(
+                            filled: true,
+                            hintText: 'First Name...',
+                            labelText: 'First Name',
                           ),
-                          TextFormField(
-                            controller: hikerLNameController,
-                            decoration: const InputDecoration(
-                              filled: true,
-                              hintText: 'Last Name...',
-                              labelText: 'Last Name',
-                            ),
-                            onChanged: (value) {
-                              setState(() {
-                                firstName = value;
-                              });
-                            },
+                          onChanged: (value) {
+                            setState(() {
+                              firstName = value;
+                            });
+                          },
+                        ),
+                        TextFormField(
+                          controller: hikerLNameController,
+                          decoration: const InputDecoration(
+                            filled: true,
+                            hintText: 'Last Name...',
+                            labelText: 'Last Name',
                           ),
-                        ]),
-                        Padding(
-                          child: SpinBox(
-                            min: 1,
-                            max: 100,
-                            value: 50,
-                            decoration: const InputDecoration(
-                              hintText: 'Weight',
-                              labelText: 'Weight',
-                            ),
-                            onChanged: (value) => weight = value,
+                          onChanged: (value) {
+                            setState(() {
+                              firstName = value;
+                            });
+                          },
+                        ),
+                        SpinBox(
+                          min: 1,
+                          max: 300,
+                          value: 50,
+                          decoration: const InputDecoration(
+                            hintText: 'Weight',
+                            labelText: 'Weight',
                           ),
-                          padding: const EdgeInsets.all(16),
+                          onChanged: (value) => weight = value,
                         ),
                         SpinBox(
                           min: 1,
@@ -130,11 +125,11 @@ class _HikerFormState extends State<HikerForm> {
                         ),
                         SpinBox(
                           min: 50,
-                          max: 100,
+                          max: 200,
                           value: 50,
                           decoration: const InputDecoration(
                             hintText: 'Height',
-                            labelText: 'Height',
+                            labelText: 'Height(in)',
                           ),
                           onChanged: (value) => height = value,
                         ),

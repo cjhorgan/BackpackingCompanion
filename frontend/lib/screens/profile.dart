@@ -118,9 +118,10 @@ class Profile extends StatelessWidget {
                 ),
                 Text(speed)
               ]),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [iconButton(Icons.forest, 'Trips')]),
+              Row(children: [
+                iconButton(Icons.forest, 'Trips'),
+                iconButton(Icons.backpack, 'Pack')
+              ]),
             ],
           )),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/Inventory.dart';
+import 'package:frontend/calendar.dart';
 import 'package:frontend/home.dart';
 import 'package:frontend/layout.dart';
 import 'package:frontend/screens/profile.dart';
@@ -76,9 +77,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         iconTheme: IconThemeData(color: textColor, size: 28),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TableEventsExample(),
+                      settings: RouteSettings(arguments: hiker)));
+            },
             icon: Icon(
-              Icons.notifications,
+              Icons.forest,
               color: darkColorScheme.onSurface,
             ),
           ),
@@ -109,8 +116,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         elevation: 15,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.forest),
-            label: 'Trip',
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.location_pin),

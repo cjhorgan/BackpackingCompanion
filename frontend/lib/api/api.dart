@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:frontend/globals.dart';
 import 'package:frontend/models/hiker.dart';
 import '../models/trip.dart';
 import '../models/item.dart';
@@ -111,6 +112,16 @@ class TripProvider with ChangeNotifier {
       notifyListeners();
       throw Exception('Failed to update album.');
     }
+  }
+
+  Trip getTrip(int? id) {
+    int s = 0;
+    for (int i = 0; i < _trips.length; i++) {
+      if (_trips.elementAt(i).trip_id == id) {
+        s = i;
+      }
+    }
+    return _trips[s];
   }
 
   void addTrip(Trip trip) async {
@@ -350,6 +361,16 @@ class HikerProvider with ChangeNotifier {
 
   List<Hiker> get hikers {
     return [..._hikers];
+  }
+
+  Hiker getHiker(dynamic? id) {
+    int s = 0;
+    for (int i = 0; i < _hikers.length; i++) {
+      if (_hikers.elementAt(i).hiker_id == id) {
+        s = i;
+      }
+    }
+    return _hikers[s];
   }
 
   void deleteHiker(Hiker hiker) async {
