@@ -31,7 +31,7 @@ class _LayoutState extends State<Layout> {
     final tripP = Provider.of<TripProvider>(context);
     final hikerP = Provider.of<HikerProvider>(context);
 
-    Trip trip = tripP.getTrip(globals.tripID);
+    Trip trip = tripP.getTrip(1);
 
     List<dynamic> _hikers = [trip.trip_hikers];
     List<Hiker> th = List.generate(

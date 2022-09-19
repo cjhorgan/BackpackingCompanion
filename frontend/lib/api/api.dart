@@ -115,13 +115,18 @@ class TripProvider with ChangeNotifier {
   }
 
   Trip getTrip(int? id) {
-    int s = 0;
+    int n = 0;
     for (int i = 0; i < _trips.length; i++) {
-      if (_trips.elementAt(i).trip_id == id) {
-        s = i;
+      if (id == _trips.elementAt(i).trip_id) {
+        Trip p = _trips[i];
+        id = p.trip_id;
+        n = i;
+        break;
+      } else {
+        print("notFound");
       }
     }
-    return _trips[s];
+    return _trips[n];
   }
 
   void addTrip(Trip trip) async {

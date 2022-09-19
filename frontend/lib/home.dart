@@ -4,6 +4,7 @@ import 'package:frontend/mealplan.dart';
 import 'package:frontend/models/hiker.dart';
 import 'package:frontend/models/trip.dart';
 import 'package:frontend/screens/createTrip.dart';
+import 'package:frontend/screens/profile.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:frontend/mealplan.dart';
 import 'package:intl/intl.dart';
@@ -29,11 +30,17 @@ class _HomeState extends State<Home> {
   final List<String> _filters = <String>[];
   @override
   Widget build(BuildContext context) {
+    final tripP = Provider.of<TripProvider>(context);
+
     DateTime today = DateTime.now();
     DateTime time = DateTime.now();
     String formattedDate = DateFormat.MMMMEEEEd().format(today);
     String formattedTime = DateFormat.jm().format(today);
     final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
+    final tripstart = tripP.getTrip(2).trip_plan_start_datetime;
+    final tripEnd = tripP.getTrip(2).trip_plan_end_datetime;
+    String tripstartDate = DateFormat.MMMd().format(tripstart);
+    String tripEndDate = DateFormat.MMMd().format(tripEnd);
 
     return Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -84,7 +91,7 @@ class _HomeState extends State<Home> {
                               children: [
                                 Container(
                                     margin: EdgeInsets.only(left: 5),
-                                    child: Text("Trip",
+                                    child: Text(tripP.getTrip(89).trip_name,
                                         style: TextStyle(
                                           fontSize: 25,
                                           fontWeight: FontWeight.w400,
@@ -126,6 +133,10 @@ class _HomeState extends State<Home> {
                                       ),
                                     ])
                               ]),
+                          // LinearProgressIndicator(
+                          //   value: .5,
+                          //   semanticsLabel: 'Linear progress indicator',
+                          // ),
 
                           Card(
                               shape: RoundedRectangleBorder(
@@ -147,11 +158,12 @@ class _HomeState extends State<Home> {
                                         fit: BoxFit.cover,
                                       )))),
                           Padding(padding: EdgeInsets.all(10)),
+                          Divider(),
 
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Start",
+                                Text(tripstartDate,
                                     style: TextStyle(
                                       color: darkColorScheme.onSurface,
                                       fontSize: 20,
@@ -161,7 +173,7 @@ class _HomeState extends State<Home> {
                                       color: darkColorScheme.onSurface,
                                       fontSize: 20,
                                     )),
-                                Text("End",
+                                Text(tripEndDate,
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w400,
@@ -174,6 +186,12 @@ class _HomeState extends State<Home> {
                                       ],
                                     ))
                               ]),
+
+                          Padding(padding: EdgeInsets.all(10)),
+                          LinearProgressIndicator(
+                            value: .5,
+                            semanticsLabel: 'Linear progress indicator',
+                          ),
                           Padding(padding: EdgeInsets.all(10)),
 
                           // Container(
@@ -190,22 +208,28 @@ class _HomeState extends State<Home> {
                           //             ),
                           //           ],
                           //         ))),
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                color: Theme.of(context).colorScheme.outline,
-                              ),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(12)),
-                            ),
-                            elevation: 30,
-                            child: Container(
-                                padding: EdgeInsets.all(5),
-                                child: Center(
-                                    child: Wrap(
-                                  children: actorWidgets.toList(),
-                                ))),
-                          ),
+                          Stack(
+                              alignment: const Alignment(0.6, 0.6),
+                              children: [
+                                Card(
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                      color:
+                                          Theme.of(context).colorScheme.outline,
+                                    ),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(12)),
+                                  ),
+                                  elevation: 30,
+                                  child: Container(
+                                      padding: EdgeInsets.all(5),
+                                      child: Center(
+                                          child: Wrap(
+                                        children: actorWidgets.toList(),
+                                      ))),
+                                ),
+                                // Icon(Icons.hiking_rounded)
+                              ])
                         ]),
                   ))),
           // Container(
@@ -216,23 +240,17 @@ class _HomeState extends State<Home> {
 
   Iterable<Widget> get actorWidgets {
     final hikerP = Provider.of<HikerProvider>(context);
-    final List<Hiker> _cast = List.generate(
-        hikerP.hikers.length,
-        (i) => Hiker(
-              hiker_id: hikerP.hikers[i].hiker_id,
-              hiker_age: hikerP.hikers[i].hiker_age,
-              hiker_avg_speed_flat: hikerP.hikers[i].hiker_avg_speed_flat,
-              hiker_first_name: hikerP.hikers[i].hiker_first_name,
-              hiker_height_inch: i.toDouble(),
-              hiker_last_name: hikerP.hikers[i].hiker_last_name,
-              hiker_natural_gender: '$i',
-              hiker_physical_weight: i.toDouble(),
-              hiker_trips_completed: i,
-            ));
-    List<int?> hikerTrip = [];
-    ThemeData(useMaterial3: true, colorScheme: darkColorScheme);
 
     final tripP = Provider.of<TripProvider>(context);
+
+    int? x = 89;
+
+    final tripH = tripP.getTrip(x).trip_hikers;
+
+    print(tripH);
+    final List<Hiker> _cast =
+        List.generate(tripH!.length, (i) => hikerP.getHiker(tripH[i]));
+    ThemeData(useMaterial3: true, colorScheme: darkColorScheme);
 
     return _cast.map((Hiker hiker) {
       return Padding(
@@ -246,6 +264,7 @@ class _HomeState extends State<Home> {
                             width: 1, color: darkColorScheme.outline)))
                 .copyWith(elevation: ButtonStyleButton.allOrNull(20.0)),
             child: CircleAvatar(
+                radius: 20,
                 backgroundColor: darkColorScheme.surface,
                 child:
                     Text(hiker.hiker_first_name[0] + hiker.hiker_last_name[0],
@@ -255,6 +274,13 @@ class _HomeState extends State<Home> {
                           fontWeight: FontWeight.w400,
                         ))),
             onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Profile(
+                            hiker: hiker,
+                          ),
+                      settings: RouteSettings(arguments: hiker)));
               print('If you stand for nothing, Burr, what’ll you fall for?');
             },
           )

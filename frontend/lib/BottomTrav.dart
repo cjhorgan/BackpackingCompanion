@@ -90,8 +90,22 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(top: 5, right: 16, bottom: 5),
-            child: IconButton(
+              margin: const EdgeInsets.only(top: 5, right: 16, bottom: 5),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                        shape: CircleBorder(
+                            side: BorderSide(
+                                width: 1, color: darkColorScheme.onSurface)))
+                    .copyWith(elevation: ButtonStyleButton.allOrNull(20.0)),
+                child: CircleAvatar(
+                    backgroundColor: darkColorScheme.tertiary,
+                    child: Text(
+                        hiker.hiker_first_name[0] + hiker.hiker_last_name[0],
+                        style: TextStyle(
+                          color: darkColorScheme.background,
+                          fontSize: 25,
+                          fontWeight: FontWeight.w400,
+                        ))),
                 onPressed: () {
                   Navigator.push(
                       context,
@@ -100,12 +114,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                 hiker: hiker,
                               ),
                           settings: RouteSettings(arguments: hiker)));
+                  print(
+                      'If you stand for nothing, Burr, what’ll you fall for?');
                 },
-                icon: Icon(
-                  Icons.account_circle,
-                  color: darkColorScheme.onSurface,
-                )),
-          )
+              ))
         ],
       ),
       body: Center(

@@ -39,82 +39,86 @@ class HikerList extends StatelessWidget {
               hiker_trips_completed: i,
             ));
     return Scaffold(
-      backgroundColor: darkColorScheme.surface,
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ),
-      appBar: AppBar(
-        title: const Text('Hikers'),
-      ),
-      body: Column(children: [
-        Container(
-          height: 10,
+        backgroundColor: darkColorScheme.surface,
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: _incrementCounter,
+        //   tooltip: 'Increment',
+        //   child: const Icon(Icons.add),
+        // ),
+        appBar: AppBar(
+          title: const Text('Hikers'),
         ),
-        Container(
-            child: (ListView.builder(
-          shrinkWrap: true,
-          itemCount: hikerP.hikers.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Card(
-                elevation: 10,
-                margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-                color: darkColorScheme.surface,
-                child: Column(children: [
-                  ListTile(
-                      title: Text(hikerP.hikers[index].hiker_first_name,
-                          style: TextStyle(color: headlineColor)),
-                      subtitle: Text(
-                        hikerP.hikers[index].hiker_last_name,
-                        style: TextStyle(fontSize: 15, color: textColor),
-                      ),
-                      leading: IconButton(
-                          iconSize: 40,
-                          icon: const Icon(Icons.person_outline_outlined),
-                          onPressed: () {
-                            hikerP.deleteHiker(hikerP.hikers[index]);
-                          }),
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BottomNav(
-                                      hiker: hikerP.hikers[index],
-                                    ), // Pass the arguments as part of the RouteSettings. The
-                                // DetailScreen reads the arguments from these settings.
-                                settings: RouteSettings(
-                                  arguments: hikerP.hikers[index],
-                                )));
+        body: Scrollbar(
+            child: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Container(
+                    child: (ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: hikerP.hikers.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                        elevation: 10,
+                        // margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+                        color: darkColorScheme.surface,
+                        child: Column(children: [
+                          ListTile(
+                              title: Text(hikerP.hikers[index].hiker_first_name,
+                                  style: TextStyle(color: headlineColor)),
+                              subtitle: Text(
+                                hikerP.hikers[index].hiker_last_name,
+                                style:
+                                    TextStyle(fontSize: 15, color: textColor),
+                              ),
+                              leading: IconButton(
+                                  iconSize: 40,
+                                  icon:
+                                      const Icon(Icons.person_outline_outlined),
+                                  onPressed: () {
+                                    hikerP.deleteHiker(hikerP.hikers[index]);
+                                  }),
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BottomNav(
+                                              hiker: hikerP.hikers[index],
+                                            ), // Pass the arguments as part of the RouteSettings. The
+                                        // DetailScreen reads the arguments from these settings.
+                                        settings: RouteSettings(
+                                          arguments: hikerP.hikers[index],
+                                        )));
 
-                        /* react to the tile being tapped */
-                      })
-                ]));
-          },
-        ))),
-        ElevatedButton(
-            style: ElevatedButton.styleFrom()
-                .copyWith(elevation: ButtonStyleButton.allOrNull(10.0)),
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const HikerForm()));
-            },
-            child: Icon(
-              Icons.person_add,
-              size: 50,
-              color: darkColorScheme.onSurfaceVariant,
-            )),
-      ]),
-      // floatingActionButton: ElevatedButton(
-      //     child: const Icon(
-      //       Icons.add,
-      //       size: 50,
-      //     ),
-      //     onPressed: () {
-      //       Navigator.of(context)
-      //           .push(MaterialPageRoute(builder: (ctx) => const HikerForm()));
-      //     }),
-    );
+                                /* react to the tile being tapped */
+                              })
+                        ]));
+                  },
+                ))),
+                Container(
+                  child: FloatingActionButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const HikerForm()));
+                      },
+                      child: Icon(
+                        Icons.person_add,
+                        size: 20,
+                        color: darkColorScheme.onSurfaceVariant,
+                      )),
+                ),
+              ]),
+
+          // floatingActionButton: ElevatedButton(
+          //     child: const Icon(
+          //       Icons.add,
+          //       size: 50,
+          //     ),
+          //     onPressed: () {
+          //       Navigator.of(context)
+          //           .push(MaterialPageRoute(builder: (ctx) => const HikerForm()));
+          //     }),
+        )));
   }
 }
 
