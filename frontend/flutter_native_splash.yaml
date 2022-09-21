@@ -11,7 +11,7 @@ flutter_native_splash:
   # splash screen to a png image.  This is useful for gradients. The image will be stretch to the
   # size of the app. Only one parameter can be used, color and background_image cannot both be set.
   # color: "#130BCD"
-  background_image: "assets/images/mount.png"
+  background_image: assets/images/mount.png
 
   # Optional parameters are listed below.  To enable a parameter, uncomment the line by removing
   # the leading # character.
@@ -42,7 +42,7 @@ flutter_native_splash:
   # Android 12 handles the splash screen differently than previous versions.  Please visit
   # https://developer.android.com/guide/topics/ui/splash-screen
   # Following are Android 12 specific parameter.
-  android_12:
+
     # The image parameter sets the splash screen icon image.  If this parameter is not specified,
     # the app's launcher icon will be used instead.
     # Please note that the splash screen will be clipped to a circle on the center of the screen.
@@ -50,7 +50,8 @@ flutter_native_splash:
     # 640 pixels in diameter.
     # App icon without an icon background: This should be 1152×1152 pixels, and fit within a circle
     # 768 pixels in diameter.
-    #image: assets/android12splash.png
+    # image: assets/images/logoBC_trans.png
+    # background_image: assets/images/mount.png
 
     # Splash screen background color.
     #color: "#42a5f5"
@@ -76,14 +77,14 @@ flutter_native_splash:
 
   # Platform specific images can be specified with the following parameters, which will override
   # the respective image parameter.  You may specify all, selected, or none of these parameters:
-  #image_android: assets/splash-android.png
+  # image_android: assets/images/mount.png
   #image_dark_android: assets/splash-invert-android.png
   #image_ios: assets/splash-ios.png
   #image_dark_ios: assets/splash-invert-ios.png
   #image_web: assets/splash-web.png
   #image_dark_web: assets/splash-invert-web.png
-  #background_image_android: "assets/background-android.png"
-  #background_image_dark_android: "assets/dark-background-android.png"
+  # background_image_android: assets/images/mount.png
+  # background_image_dark_android: assets/images/mount.png
   #background_image_ios: "assets/background-ios.png"
   #background_image_dark_ios: "assets/dark-background-ios.png"
   #background_image_web: "assets/background-web.png"
