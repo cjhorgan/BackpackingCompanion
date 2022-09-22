@@ -12,7 +12,7 @@ import 'BottomTrav.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(const MyApp());
 }
 
@@ -22,8 +22,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    FlutterNativeSplash.remove();
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ItemProvider()),
@@ -69,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     initialization();
+    // FlutterNativeSplash.remove();
   }
 
   void initialization() async {
@@ -83,7 +82,6 @@ class _MyHomePageState extends State<MyHomePage> {
     print('ready in 1...');
     await Future.delayed(const Duration(seconds: 5));
     print('go!');
-    FlutterNativeSplash.remove();
   }
 
   @override

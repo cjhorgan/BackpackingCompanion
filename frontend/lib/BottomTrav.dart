@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/Inventory.dart';
+import 'package:frontend/Mapping.dart';
 import 'package:frontend/calendar.dart';
 import 'package:frontend/home.dart';
 import 'package:frontend/layout.dart';
@@ -43,7 +44,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     Layout(),
-    Location(),
+    Mapping(),
     Inventory(),
   ];
 

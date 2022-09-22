@@ -48,6 +48,11 @@ dependencies:
   table_calendar: ^3.0.7
   multiselect_formfield: ^0.1.7
   syncfusion_flutter_datepicker: ^20.2.49
+  flutter_map_line_editor: ^3.0.0
+  flutter_map_location_marker: ^4.1.4
+  geojson: ^1.0.0
+  map_elevation: ^2.0.0
+  screenshot: ^1.2.3
 
 dev_dependencies:
 
@@ -70,6 +75,9 @@ flutter:
   assets:
     - assets/images/location.png
     - assets/images/ys.jpg
+    - assets/images/location.png
+    - assets/geojson/southmojave.geojson
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
