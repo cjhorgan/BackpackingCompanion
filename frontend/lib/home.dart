@@ -13,6 +13,24 @@ import 'Inventory.dart';
 import 'color_schemes.g.dart';
 import 'tripView.dart';
 import 'globals.dart' as globals;
+import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map/plugin_api.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:latlong2/latlong.dart';
+import 'dart:async';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:geojson/geojson.dart';
+import 'package:map_elevation/map_elevation.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:flutter_map_dragmarker/dragmarker.dart';
+import 'package:flutter_map_line_editor/polyeditor.dart';
+
+import 'package:screenshot/screenshot.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:typed_data';
+
+import 'elevationData/kelsoElevation.dart';
 
 class Home extends StatefulWidget {
   const Home({
@@ -158,7 +176,7 @@ class _HomeState extends State<Home> {
                                           Radius.circular(12)),
                                       image: DecorationImage(
                                         image: NetworkImage(
-                                            'https://media.wired.com/photos/59269cd37034dc5f91bec0f1/191:100/w_1280,c_limit/GoogleMapTA.jpg'),
+                                            'https://tile.openstreetmap.org/10/37/119.png'),
                                         fit: BoxFit.cover,
                                       )))),
                           Padding(padding: EdgeInsets.all(10)),

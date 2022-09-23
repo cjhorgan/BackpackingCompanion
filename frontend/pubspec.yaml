@@ -53,6 +53,7 @@ dependencies:
   geojson: ^1.0.0
   map_elevation: ^2.0.0
   screenshot: ^1.2.3
+  invert_colors: ^0.0.4
 
 dev_dependencies:
 
@@ -74,6 +75,8 @@ flutter:
   generate: true
   assets:
     - assets/images/location.png
+    - assets/images/logoBC_trans.png
+
     - assets/images/ys.jpg
     - assets/images/location.png
     - assets/geojson/southmojave.geojson

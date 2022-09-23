@@ -75,7 +75,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     Color shadowColor = Theme.of(context).colorScheme.shadow;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: darkColorScheme.background,
         iconTheme: IconThemeData(color: textColor, size: 28),
         actions: [
           IconButton(
