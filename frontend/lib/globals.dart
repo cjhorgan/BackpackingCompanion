@@ -16,13 +16,13 @@ import 'package:provider/provider.dart';
 import '../models/hiker.dart';
 import 'package:frontend/models/trip.dart';
 import 'package:provider/provider.dart';
-
+import 'package:collection/collection.dart';
 import 'api/MealPlanProviders.dart';
 import 'api/api.dart';
 
-bool activeTrip = false;
-int? tripID = 0;
-final List<dynamic> trip_hikers = [];
+bool activeTrip = true;
+int? tripID = 4;
+final List<dynamic> hikers = [];
 
 class GlobalVariable extends StatefulWidget {
   const GlobalVariable({Key? key}) : super(key: key);
@@ -57,7 +57,9 @@ class _GlobalVariableState extends State<GlobalVariable> {
 
     final tripP = Provider.of<TripProvider>(context, listen: false);
     print("Trip num: ${tripP.trips.length}");
-    if (tripP.trips.length != 0) {}
+
+    var trip = tripP.trips
+        .firstWhereOrNull((element) => element.trip_hikers == [hikers]);
 
     @override
     void dispose() {

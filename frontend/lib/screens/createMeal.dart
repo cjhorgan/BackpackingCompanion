@@ -21,7 +21,7 @@ class MealForm extends StatefulWidget {
   final Trip curTrip;
   final DateTime curDay;
   final Hiker curHiker;
-  final Inventory curInventory;
+  final Inventory? curInventory;
 
   const MealForm(
       {Key? key,
@@ -29,7 +29,7 @@ class MealForm extends StatefulWidget {
       required this.curTrip,
       required this.curDay,
       required this.curHiker,
-      required this.curInventory})
+      this.curInventory})
       : super(key: key);
 
   @override
@@ -145,7 +145,7 @@ class _MealFormState extends State<MealForm> {
       }
       print("On to ItemQuantity");
       ItemQuantity newitemQty = ItemQuantity(
-          inventory: widget.curInventory.inventory_id!.toInt(),
+          inventory: 2,
           item_quantity: _selectedMealsQty[i].toInt(),
           item: int.parse(_meal_components[i]),
           item_note: '',
@@ -197,425 +197,443 @@ class _MealFormState extends State<MealForm> {
         dateList.where((date) => seen.add(date)).toList();
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            _createMeal();
-          },
-          label: const Text("Create"),
-          heroTag: "creatmealSubmit",
-          icon: Icon(Icons.add_box)),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      appBar: AppBar(
-        title: const Text('Create a Meal'),
-      ),
-      body: Form(
-        child: Scrollbar(
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: Card(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(25),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 400),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ...[
-                        Column(children: [
-                          TextFormField(
-                            controller: meal_nameController,
-                            decoration: const InputDecoration(
-                              filled: true,
-                              hintText: 'Name of Meal...',
-                              labelText: 'Meal Name',
-                            ),
-                            onChanged: (value) {
-                              setState(() {
-                                meal_name = value;
-                              });
-                            },
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text('MealType',
-                                  style: Theme.of(context).textTheme.bodyText1),
-                              DropdownButton<String>(
-                                  value: mealtypedropdown,
-                                  icon: const Icon(Icons.arrow_downward),
-                                  elevation: 16,
-                                  style: const TextStyle(),
-                                  underline: Container(
-                                    height: 2,
-                                  ),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      mealtypedropdown = newValue!;
-                                    });
-                                  },
-                                  items: <String>[
-                                    'Breakfast',
-                                    'Lunch',
-                                    'Dinner',
-                                    'Snack'
-                                  ].map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList()),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text('Date:',
-                                  style: Theme.of(context).textTheme.bodyText1),
-                              DropdownButton<String>(
-                                  value: dateDropDown,
-                                  icon: const Icon(Icons.arrow_downward),
-                                  elevation: 16,
-                                  style: const TextStyle(),
-                                  underline: Container(
-                                    height: 2,
-                                  ),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      dateDropDown = newValue!;
-                                    });
-                                  },
-                                  items: dateList.map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList()),
-                            ],
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(16),
-                            child: MultiSelectFormField(
-                              title: Text(
-                                "Select Food to be added",
-                                style: TextStyle(fontSize: 16),
+        floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              _createMeal();
+            },
+            label: const Text("Create"),
+            heroTag: "creatmealSubmit",
+            icon: Icon(Icons.add_box)),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        appBar: AppBar(
+          title: const Text('Create a Meal'),
+        ),
+        body: Scrollbar(
+          child: SingleChildScrollView(
+              child: (Form(
+            child: Scrollbar(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Card(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(25),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 400),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ...[
+                            Column(children: [
+                              TextFormField(
+                                controller: meal_nameController,
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  hintText: 'Name of Meal...',
+                                  labelText: 'Meal Name',
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    meal_name = value;
+                                  });
+                                },
                               ),
-                              dataSource: multiselectfoodmap,
-                              textField: 'item_name',
-                              valueField: 'item_id',
-                              initialValue: _meal_components,
-                              onSaved: (value) {
-                                if (value == null) return;
-                                setState(() {
-                                  _meal_components = value;
-                                  print(_meal_components[0]);
-                                  _addSelectedMeals(_meal_components);
-                                });
-                              },
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                alignment: Alignment.bottomRight,
-                                child: ElevatedButton(
-                                  child: Text("Create New Food"),
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return StatefulBuilder(
-                                              builder: ((context, setState) {
-                                            return AlertDialog(
-                                              content: Stack(
-                                                children: <Widget>[
-                                                  Positioned(
-                                                    right: -40.0,
-                                                    top: -40.0,
-                                                    child: InkResponse(
-                                                      onTap: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      child: CircleAvatar(
-                                                        child:
-                                                            Icon(Icons.close),
-                                                        backgroundColor:
-                                                            Colors.red,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Form(
-                                                    child:
-                                                        SingleChildScrollView(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              25),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: <Widget>[
-                                                          Text("New Food"),
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    8.0),
-                                                            child:
-                                                                TextFormField(
-                                                              controller:
-                                                                  fooditem_nameController,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                filled: true,
-                                                                hintText:
-                                                                    'Name of Food...',
-                                                                labelText:
-                                                                    'Food Name',
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    8.0),
-                                                            child:
-                                                                TextFormField(
-                                                              controller:
-                                                                  fooditem_DescController,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                filled: true,
-                                                                hintText:
-                                                                    'Name of Meal...',
-                                                                labelText:
-                                                                    'Description',
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    8.0),
-                                                            child: SpinBox(
-                                                              min: 0.00,
-                                                              max: 10.00,
-                                                              value: 1,
-                                                              decimals: 2,
-                                                              step: .01,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                hintText:
-                                                                    'Weight(lbs)',
-                                                                labelText:
-                                                                    'Weight(lbs)',
-                                                              ),
-                                                              onChanged: (value) =>
-                                                                  item_weight =
-                                                                      value,
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            child: SpinBox(
-                                                              min: 1,
-                                                              max: 5000,
-                                                              value: 100,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                hintText:
-                                                                    'Calories',
-                                                                labelText:
-                                                                    'Calories',
-                                                              ),
-                                                              onChanged: (value) =>
-                                                                  calories = value
-                                                                      .toInt(),
-                                                            ),
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(16),
-                                                          ),
-                                                          Padding(
-                                                            child: SpinBox(
-                                                              min: 1,
-                                                              max: 100,
-                                                              value: 10,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                hintText:
-                                                                    'Protein',
-                                                                labelText:
-                                                                    'Protein',
-                                                              ),
-                                                              onChanged: (value) =>
-                                                                  protein = value
-                                                                      .toInt(),
-                                                            ),
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(16),
-                                                          ),
-                                                          Padding(
-                                                            child: SpinBox(
-                                                              min: 1,
-                                                              max: 100,
-                                                              value: 5,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                hintText:
-                                                                    'Sugar',
-                                                                labelText:
-                                                                    'Sugar',
-                                                              ),
-                                                              onChanged: (value) =>
-                                                                  sugar = value
-                                                                      .toInt(),
-                                                            ),
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(16),
-                                                          ),
-                                                          SwitchListTile(
-                                                            title: const Text(
-                                                              'Favorite',
-                                                              style: TextStyle(
-                                                                  fontSize: 10),
-                                                            ),
-                                                            value: _isFavorite,
-                                                            onChanged:
-                                                                (bool value) {
-                                                              setState(() {
-                                                                _isFavorite =
-                                                                    value;
-                                                                print(
-                                                                    "isFav: ${_isFavorite}");
-                                                              });
-                                                            },
-                                                            secondary:
-                                                                const Icon(
-                                                                    Icons.star),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(16),
-                                                            child:
-                                                                ElevatedButton(
-                                                              child: Text(
-                                                                  "Submitß"),
-                                                              onPressed: () {
-                                                                addFoodItem();
-                                                              },
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          }));
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text('MealType',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1),
+                                  DropdownButton<String>(
+                                      value: mealtypedropdown,
+                                      icon: const Icon(Icons.arrow_downward),
+                                      elevation: 16,
+                                      style: const TextStyle(),
+                                      underline: Container(
+                                        height: 2,
+                                      ),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          mealtypedropdown = newValue!;
                                         });
+                                      },
+                                      items: <String>[
+                                        'Breakfast',
+                                        'Lunch',
+                                        'Dinner',
+                                        'Snack'
+                                      ].map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList()),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text('Date:',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1),
+                                  DropdownButton<String>(
+                                      value: dateDropDown,
+                                      icon: const Icon(Icons.arrow_downward),
+                                      elevation: 16,
+                                      style: const TextStyle(),
+                                      underline: Container(
+                                        height: 2,
+                                      ),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          dateDropDown = newValue!;
+                                        });
+                                      },
+                                      items: dateList
+                                          .map<DropdownMenuItem<String>>(
+                                              (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList()),
+                                ],
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(16),
+                                child: MultiSelectFormField(
+                                  title: Text(
+                                    "Select Food to be added",
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  dataSource: multiselectfoodmap,
+                                  textField: 'item_name',
+                                  valueField: 'item_id',
+                                  initialValue: _meal_components,
+                                  onSaved: (value) {
+                                    if (value == null) return;
+                                    setState(() {
+                                      _meal_components = value;
+                                      print(_meal_components[0]);
+                                      _addSelectedMeals(_meal_components);
+                                    });
                                   },
                                 ),
                               ),
-                              Container(
-                                alignment: Alignment.bottomLeft,
-                                child: ElevatedButton(
-                                    child: Text("Add Food Qty"),
-                                    onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: Text("Item Quantities"),
-                                              content: Stack(children: <Widget>[
-                                                Positioned(
-                                                  right: -40.0,
-                                                  top: -40.0,
-                                                  child: InkResponse(
-                                                    onTap: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: CircleAvatar(
-                                                      child: Icon(Icons.close),
-                                                      backgroundColor:
-                                                          Colors.red,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                    padding:
-                                                        EdgeInsets.all(4.0),
-                                                    child: ListView.builder(
-                                                        shrinkWrap: true,
-                                                        physics:
-                                                            ScrollPhysics(),
-                                                        itemCount:
-                                                            _selectedMeals
-                                                                .length,
-                                                        itemBuilder:
-                                                            (BuildContext
-                                                                    context,
-                                                                index) {
-                                                          return Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    4.0),
-                                                            child: Container(
-                                                              child: SpinBox(
-                                                                  min: 0,
-                                                                  max: 100,
-                                                                  value: _selectedMealsQty[
-                                                                          index]
-                                                                      .toDouble(),
+                              Row(
+                                children: [
+                                  Container(
+                                    alignment: Alignment.bottomRight,
+                                    child: ElevatedButton(
+                                      child: Text("Create New Food"),
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return StatefulBuilder(builder:
+                                                  ((context, setState) {
+                                                return AlertDialog(
+                                                  content: Stack(
+                                                    children: <Widget>[
+                                                      Positioned(
+                                                        right: -40.0,
+                                                        top: -40.0,
+                                                        child: InkResponse(
+                                                          onTap: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: CircleAvatar(
+                                                            child: Icon(
+                                                                Icons.close),
+                                                            backgroundColor:
+                                                                Colors.red,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Form(
+                                                        child:
+                                                            SingleChildScrollView(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(25),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: <Widget>[
+                                                              Text("New Food"),
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            8.0),
+                                                                child:
+                                                                    TextFormField(
+                                                                  controller:
+                                                                      fooditem_nameController,
                                                                   decoration:
-                                                                      InputDecoration(
+                                                                      const InputDecoration(
+                                                                    filled:
+                                                                        true,
                                                                     hintText:
-                                                                        _selectedMeals[
-                                                                            index],
+                                                                        'Name of Food...',
                                                                     labelText:
-                                                                        _selectedMeals[
-                                                                            index],
+                                                                        'Food Name',
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            8.0),
+                                                                child:
+                                                                    TextFormField(
+                                                                  controller:
+                                                                      fooditem_DescController,
+                                                                  decoration:
+                                                                      const InputDecoration(
+                                                                    filled:
+                                                                        true,
+                                                                    hintText:
+                                                                        'Name of Meal...',
+                                                                    labelText:
+                                                                        'Description',
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            8.0),
+                                                                child: SpinBox(
+                                                                  min: 0.00,
+                                                                  max: 10.00,
+                                                                  value: 1,
+                                                                  decimals: 2,
+                                                                  step: .01,
+                                                                  decoration:
+                                                                      const InputDecoration(
+                                                                    hintText:
+                                                                        'Weight(lbs)',
+                                                                    labelText:
+                                                                        'Weight(lbs)',
                                                                   ),
                                                                   onChanged: (value) =>
-                                                                      _selectedMealsQty[
-                                                                              index] =
+                                                                      item_weight =
+                                                                          value,
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                child: SpinBox(
+                                                                  min: 1,
+                                                                  max: 5000,
+                                                                  value: 100,
+                                                                  decoration:
+                                                                      const InputDecoration(
+                                                                    hintText:
+                                                                        'Calories',
+                                                                    labelText:
+                                                                        'Calories',
+                                                                  ),
+                                                                  onChanged: (value) =>
+                                                                      calories =
                                                                           value
-                                                                              .toInt()),
-                                                            ),
-                                                          );
-                                                        })),
-                                              ]),
-                                              actions: [
-                                                ElevatedButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: Text('Ok'))
-                                              ],
-                                            );
-                                          });
-                                    }),
+                                                                              .toInt(),
+                                                                ),
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(16),
+                                                              ),
+                                                              Padding(
+                                                                child: SpinBox(
+                                                                  min: 1,
+                                                                  max: 100,
+                                                                  value: 10,
+                                                                  decoration:
+                                                                      const InputDecoration(
+                                                                    hintText:
+                                                                        'Protein',
+                                                                    labelText:
+                                                                        'Protein',
+                                                                  ),
+                                                                  onChanged: (value) =>
+                                                                      protein =
+                                                                          value
+                                                                              .toInt(),
+                                                                ),
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(16),
+                                                              ),
+                                                              Padding(
+                                                                child: SpinBox(
+                                                                  min: 1,
+                                                                  max: 100,
+                                                                  value: 5,
+                                                                  decoration:
+                                                                      const InputDecoration(
+                                                                    hintText:
+                                                                        'Sugar',
+                                                                    labelText:
+                                                                        'Sugar',
+                                                                  ),
+                                                                  onChanged:
+                                                                      (value) =>
+                                                                          sugar =
+                                                                              value.toInt(),
+                                                                ),
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(16),
+                                                              ),
+                                                              SwitchListTile(
+                                                                title:
+                                                                    const Text(
+                                                                  'Favorite',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          10),
+                                                                ),
+                                                                value:
+                                                                    _isFavorite,
+                                                                onChanged: (bool
+                                                                    value) {
+                                                                  setState(() {
+                                                                    _isFavorite =
+                                                                        value;
+                                                                    print(
+                                                                        "isFav: ${_isFavorite}");
+                                                                  });
+                                                                },
+                                                                secondary:
+                                                                    const Icon(
+                                                                        Icons
+                                                                            .star),
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(16),
+                                                                child:
+                                                                    ElevatedButton(
+                                                                  child: Text(
+                                                                      "Submitß"),
+                                                                  onPressed:
+                                                                      () {
+                                                                    addFoodItem();
+                                                                  },
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              }));
+                                            });
+                                      },
+                                    ),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.bottomLeft,
+                                    child: ElevatedButton(
+                                        child: Text("Add Food Qty"),
+                                        onPressed: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title:
+                                                      Text("Item Quantities"),
+                                                  content:
+                                                      Stack(children: <Widget>[
+                                                    Positioned(
+                                                      right: -40.0,
+                                                      top: -40.0,
+                                                      child: InkResponse(
+                                                        onTap: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: CircleAvatar(
+                                                          child:
+                                                              Icon(Icons.close),
+                                                          backgroundColor:
+                                                              Colors.red,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.all(4.0),
+                                                      child: Container(
+                                                          width: 500,
+                                                          child:
+                                                              ListView.builder(
+                                                                  shrinkWrap:
+                                                                      true,
+                                                                  physics:
+                                                                      ScrollPhysics(),
+                                                                  itemCount:
+                                                                      _selectedMeals
+                                                                          .length,
+                                                                  itemBuilder:
+                                                                      (BuildContext
+                                                                              context,
+                                                                          index) {
+                                                                    return Padding(
+                                                                        padding:
+                                                                            EdgeInsets.all(16),
+                                                                        child: SpinBox(
+                                                                            min: 0,
+                                                                            max: 100,
+                                                                            value: _selectedMealsQty[index].toDouble(),
+                                                                            decoration: InputDecoration(
+                                                                              hintText: _selectedMeals[index],
+                                                                              labelText: _selectedMeals[index],
+                                                                            ),
+                                                                            onChanged: (value) => _selectedMealsQty[index] = value.toInt()));
+                                                                  })),
+                                                    )
+                                                  ]),
+                                                  actions: [
+                                                    ElevatedButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: Text('Ok'))
+                                                  ],
+                                                );
+                                              });
+                                        }),
+                                  )
+                                ],
                               )
-                            ],
-                          )
-                        ])
-                      ].expand((widget) => [widget, const SizedBox(height: 40)])
-                    ],
+                            ])
+                          ].expand(
+                              (widget) => [widget, const SizedBox(height: 40)])
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
-      ),
-    );
+          ))),
+        ));
   }
 }

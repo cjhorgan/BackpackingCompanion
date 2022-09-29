@@ -69,7 +69,9 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
           trip_name: tripNameVal,
           trip_plan_start_datetime: date,
           trip_plan_end_datetime: endDate,
-          trip_hikers: getHikers);
+          trip_hikers: getHikers,
+          trip_is_active: false,
+          trip_is_complete: false);
 
       error = Provider.of<TripProvider>(context, listen: false).getError(trip);
 
@@ -370,7 +372,7 @@ class _FormWidgetsDemoState extends State<FormWidgetsDemo> {
           onPressed: () {
             setState(() {
               globals.activeTrip == true;
-              globals.trip_hikers == getHikers;
+              globals.hikers == getHikers;
             });
             if (validTrip) {
               onAdd();

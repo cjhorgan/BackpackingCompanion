@@ -21,17 +21,7 @@ class Inventory extends StatelessWidget {
     final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
     final hikerP = Provider.of<HikerProvider>(context);
     int? hikerID = hiker.hiker_id;
-    List.generate(
-        20,
-        (i) => Item(
-              item_id: i,
-              item_hiker: hikerID,
-              item_weight: i.toDouble(),
-              item_name: '$i',
-              isEssential: true,
-              isFavorite: false,
-              item_description: '',
-            ));
+
     return Scaffold(
       // floatingActionButton: FloatingActionButton(
       //   onPressed: _incrementCounter,
@@ -74,13 +64,13 @@ class Inventory extends StatelessWidget {
             size: 30,
           ),
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AddItemScreen(
-                          hiker: hiker,
-                        ),
-                    settings: RouteSettings(arguments: hiker)));
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => AddItemScreen(
+            //               hiker: hiker,
+            //             ),
+            //         settings: RouteSettings(arguments: hiker)));
           }),
     );
   }

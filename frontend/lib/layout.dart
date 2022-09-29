@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/api/MealPlanProviders.dart';
 import 'package:frontend/api/api.dart';
 import 'package:frontend/home.dart';
 import 'package:frontend/mealplan.dart';
 import 'package:frontend/models/hiker.dart';
 import 'package:frontend/models/trip.dart';
 import 'package:frontend/screens/createTrip.dart';
+import 'package:frontend/screens/itemStorageViewer.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:frontend/mealplan.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +14,7 @@ import 'Inventory.dart';
 import 'color_schemes.g.dart';
 import 'tripView.dart';
 import 'globals.dart' as globals;
+import 'package:collection/collection.dart';
 
 class Layout extends StatefulWidget {
   const Layout({Key? key, this.trip, this.hiker}) : super(key: key);
@@ -30,21 +33,28 @@ class _LayoutState extends State<Layout> {
     final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
     final tripP = Provider.of<TripProvider>(context);
     final hikerP = Provider.of<HikerProvider>(context);
+    final mealP = Provider.of<MealPlanProvider>(context);
 
-    Trip trip = tripP.getTrip(1);
+    Trip? trip = tripP.getTrip(4);
+    var mealPlan = mealP.mealplans[2];
+    // .singleWhereOrNull(((mealplan) =>
+    //     mealplan.mealplan_trip == trip!.trip_id!.toInt() &&
+    //     mealplan.mealplan_hiker == hiker.hiker_id));
 
-    List<dynamic> _hikers = [trip.trip_hikers];
+    List<dynamic> _hikers = [trip?.trip_hikers];
     List<Hiker> th = List.generate(
         _hikers.length, (index) => hikerP.getHiker(_hikers[index]));
 
-    var name = trip.trip_name;
+    var name = trip?.trip_name;
     final bool tripo = globals.activeTrip;
+    final invP = Provider.of<InventoryProvider>(context);
 
+    var curInv = invP.inventorys.singleWhereOrNull(
+        (inventory) => inventory.inventory_trip == trip?.trip_id!.toInt());
     ThemeData(
         useMaterial3: true,
         colorScheme: darkColorScheme,
         textTheme: GoogleFonts.aBeeZeeTextTheme());
-
     Color containerColor = Theme.of(context).colorScheme.secondaryContainer;
     // Color background = Theme.of(context).colorScheme.background;
     Color textColor = Theme.of(context).colorScheme.onBackground;
@@ -71,7 +81,7 @@ class _LayoutState extends State<Layout> {
             //     }
             //   })()),
             // ),
-            if (globals.activeTrip == false)
+            if (globals.activeTrip == true)
               Home(
                 hiker: hiker,
               )
@@ -224,6 +234,11 @@ class _LayoutState extends State<Layout> {
                           child: InkWell(
                               splashColor: Colors.blue.withAlpha(50),
                               onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            (ItemStorageViewer())));
                                 debugPrint('Card tapped.');
                               },
                               child: Container(
@@ -266,11 +281,17 @@ class _LayoutState extends State<Layout> {
                           child: InkWell(
                               splashColor: Colors.blue.withAlpha(50),
                               onTap: () {
+                                print(mealPlan.mealplan_hiker);
+
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            (MealPlanScreen())));
+                                        builder: (context) => (MealPlanScreen(
+                                              mealplan: mealPlan,
+                                              curHiker: hiker,
+                                              curTrip: trip,
+                                              curInventory: curInv,
+                                            ))));
                                 debugPrint('Card tapped.');
                               },
                               child: Container(

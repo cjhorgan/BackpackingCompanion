@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/Inventory.dart';
+import 'package:frontend/Mapping.dart';
 import 'package:frontend/calendar.dart';
 import 'package:frontend/home.dart';
 import 'package:frontend/layout.dart';
+import 'package:frontend/screens/itemStorageViewer.dart';
 import 'package:frontend/screens/profile.dart';
 import 'package:frontend/tripView.dart';
 import 'color_schemes.g.dart';
@@ -43,14 +45,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     Layout(),
-    Location(),
-    Inventory(),
+    Mapping(),
+    ItemStorageViewer(),
   ];
 
   void _onItemTapped(int index) {
-    final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
-
     setState(() {
+      final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
       (context) => Layout(hiker: hiker);
       _selectedIndex = index;
     });
@@ -60,10 +61,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   Widget build(BuildContext context) {
     final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
     // final trip = ModalRoute.of(context)!.settings.arguments as Trip;
-
     Layout(
       hiker: hiker,
     );
+    // setState(() {
+    //   final hiker = ModalRoute.of(context)!.settings.arguments as Hiker;
+    //   (context) => Layout(hiker: hiker);
+    // });
+
     final hikerP = Provider.of<HikerProvider>(context);
     int? hikerID = hiker.hiker_id;
     ThemeData(useMaterial3: true, colorScheme: darkColorScheme);
@@ -73,7 +78,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     Color shadowColor = Theme.of(context).colorScheme.shadow;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: darkColorScheme.background,
         iconTheme: IconThemeData(color: textColor, size: 28),
         actions: [
           IconButton(
@@ -81,7 +85,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => TableEventsExample(),
+                      builder: (context) => TripList(),
                       settings: RouteSettings(arguments: hiker)));
             },
             icon: Icon(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/BottomTrav.dart';
 import 'package:frontend/api/api.dart';
+import 'package:frontend/globals.dart';
 import 'package:frontend/models/hiker.dart';
 import 'package:frontend/screens/profile.dart';
 import 'package:http/http.dart';
@@ -10,9 +11,10 @@ import 'models/item.dart';
 import 'package:frontend/screens/addItem.dart';
 import 'package:frontend/models/trip.dart';
 import 'screens/createHiker.dart';
-
+import 'package:invert_colors/invert_colors.dart';
 import 'color_schemes.g.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
+import 'globals.dart' as globals;
 
 class HikerList extends StatelessWidget {
   const HikerList({super.key});
@@ -39,86 +41,133 @@ class HikerList extends StatelessWidget {
               hiker_trips_completed: i,
             ));
     return Scaffold(
-        backgroundColor: darkColorScheme.surface,
+
         // floatingActionButton: FloatingActionButton(
         //   onPressed: _incrementCounter,
         //   tooltip: 'Increment',
         //   child: const Icon(Icons.add),
         // ),
-        appBar: AppBar(
-          title: const Text('Hikers'),
-        ),
-        body: Scrollbar(
-            child: SingleChildScrollView(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
-                    child: (ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: hikerP.hikers.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                        elevation: 10,
-                        // margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-                        color: darkColorScheme.surface,
-                        child: Column(children: [
-                          ListTile(
-                              title: Text(hikerP.hikers[index].hiker_first_name,
-                                  style: TextStyle(color: headlineColor)),
-                              subtitle: Text(
-                                hikerP.hikers[index].hiker_last_name,
-                                style:
-                                    TextStyle(fontSize: 15, color: textColor),
-                              ),
-                              leading: IconButton(
-                                  iconSize: 40,
-                                  icon:
-                                      const Icon(Icons.person_outline_outlined),
-                                  onPressed: () {
-                                    hikerP.deleteHiker(hikerP.hikers[index]);
-                                  }),
-                              onTap: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => BottomNav(
-                                              hiker: hikerP.hikers[index],
-                                            ), // Pass the arguments as part of the RouteSettings. The
-                                        // DetailScreen reads the arguments from these settings.
-                                        settings: RouteSettings(
-                                          arguments: hikerP.hikers[index],
-                                        )));
 
-                                /* react to the tile being tapped */
-                              })
-                        ]));
-                  },
-                ))),
+        body: Center(
+            heightFactor: 1.3,
+            child: Scrollbar(
+                child: SingleChildScrollView(
+              child: Column(children: [
+                const Image(
+                    isAntiAlias: true,
+                    filterQuality: FilterQuality.medium,
+                    height: 300,
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    image: AssetImage(
+                      'assets/images/logoBC_trans.png',
+                    )),
                 Container(
-                  child: FloatingActionButton(
+                    margin:
+                        const EdgeInsets.only(left: 20, right: 20, bottom: 0),
+                    child: (ListView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      itemCount: hikerP.hikers.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Card(
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(8))),
+                            elevation: 10,
+                            child: Column(children: [
+                              ListTile(
+                                  contentPadding: EdgeInsets.only(
+                                      top: 5, bottom: 5, left: 5),
+                                  title: Text(
+                                      hikerP.hikers[index].hiker_first_name +
+                                          " " +
+                                          hikerP.hikers[index].hiker_last_name,
+                                      style: TextStyle(
+                                          color: headlineColor,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500)),
+                                  // subtitle: Text(
+                                  //   hikerP.hikers[index].hiker_last_name,
+                                  //   style:
+                                  //       TextStyle(fontSize: 15, color: textColor),
+                                  // ),
+                                  leading: Container(
+                                      margin: EdgeInsets.only(left: 5),
+                                      decoration: ShapeDecoration(
+                                          shape: CircleBorder(
+                                              side: BorderSide(
+                                                  width: 2,
+                                                  color: darkColorScheme
+                                                      .onSurface))),
+                                      child: CircleAvatar(
+                                          radius: 20,
+                                          backgroundColor:
+                                              darkColorScheme.surface,
+                                          child: Text(
+                                              hikerP.hikers[index]
+                                                      .hiker_first_name[0] +
+                                                  hikerP.hikers[index]
+                                                      .hiker_last_name[0],
+                                              style: TextStyle(
+                                                color:
+                                                    darkColorScheme.onSurface,
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.w500,
+                                              )))),
+                                  onTap: () {
+                                    if (tripP.getTrip(3) == null) {
+                                      activeTrip = false;
+                                    }
+
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => BottomNav(
+                                                  hiker: hikerP.hikers[index],
+                                                ), // Pass the arguments as part of the RouteSettings. The
+                                            // DetailScreen reads the arguments from these settings.
+                                            settings: RouteSettings(
+                                              arguments: hikerP.hikers[index],
+                                            )));
+
+                                    /* react to the tile being tapped */
+                                  })
+                            ]));
+                      },
+                    ))),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.only(left: 20),
+                  child: TextButton.icon(
+                      label: Text(
+                        "Create Hiker",
+                        style: TextStyle(fontSize: 25),
+                      ),
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => const HikerForm()));
                       },
-                      child: Icon(
-                        Icons.person_add,
-                        size: 20,
-                        color: darkColorScheme.onSurfaceVariant,
+                      icon: Icon(
+                        Icons.add,
+                        size: 25,
+                        color: darkColorScheme.primary,
                       )),
                 ),
               ]),
 
-          // floatingActionButton: ElevatedButton(
-          //     child: const Icon(
-          //       Icons.add,
-          //       size: 50,
-          //     ),
-          //     onPressed: () {
-          //       Navigator.of(context)
-          //           .push(MaterialPageRoute(builder: (ctx) => const HikerForm()));
-          //     }),
-        )));
+              // floatingActionButton: ElevatedButton(
+              //     child: const Icon(
+              //       Icons.add,
+              //       size: 50,
+              //     ),
+              //     onPressed: () {
+              //       Navigator.of(context)
+              //           .push(MaterialPageRoute(builder: (ctx) => const HikerForm()));
+              //     }),
+            ))));
   }
 }
 

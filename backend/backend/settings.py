@@ -20,8 +20,8 @@ SECRET_KEY = 'django-insecure-)umti+colfa%5hdttz&@fllvmjz-o29rh@+zq)-n(l=n)c990x
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost','testserver']
-
+# ALLOWED_HOSTS = ['127.0.0.1', 'localhost','testserver']
+ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,8 +41,6 @@ INSTALLED_APPS = [
     'mealplan.apps.MealplanConfig',
     'report.apps.ReportConfig',
 ]
-
-AUTH_USER_MODEL = 'account.Account'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -109,10 +107,12 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
-
+DATETIME_FORMAT = "%Y-%m-%d%H:%M"
 USE_I18N = True
+USE_L10N = False
+USE_TZ = False
+DATE_INPUT_FORMATS = ['%d/%m/%Y']  
 
-USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/

@@ -6,6 +6,9 @@ import '../models/trip.dart';
 import '../models/item.dart';
 import 'package:http/http.dart' as http;
 
+const String target = 'http://127.0.0.1:8000';
+
+//http://10.0.2.2:8000
 class ItemProvider with ChangeNotifier {
   ItemProvider() {
     fetchTasks();
@@ -20,7 +23,7 @@ class ItemProvider with ChangeNotifier {
   void addItem(Item item) async {
     print(jsonEncode(item));
 
-    final response = await http.post(Uri.parse('http://127.0.0.1:8000/item/'),
+    final response = await http.post(Uri.parse(target + '/item/'),
         headers: {"Content-Type": "application/json"}, body: json.encode(item));
     print(response.body);
     if (response.statusCode == 201) {
@@ -32,8 +35,8 @@ class ItemProvider with ChangeNotifier {
 
   void deleteTodo(Item item) async {
     print('The value of the input is: ${item.item_id}');
-    final response = await http
-        .delete(Uri.parse('http://127.0.0.1:8000/item/${item.item_id}'));
+    final response =
+        await http.delete(Uri.parse(target + '/item/${item.item_id}'));
 
     if (response.statusCode == 204) {
       _items.remove(item);
@@ -42,7 +45,7 @@ class ItemProvider with ChangeNotifier {
   }
 
   fetchTasks() async {
-    const url = 'http://127.0.0.1:8000/item/?format=json';
+    const url = (target + '/item/?format=json');
     // ignore: unused_local_variable
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
@@ -68,8 +71,8 @@ class TripProvider with ChangeNotifier {
 
   void deleteTrip(Trip trip) async {
     print('The value of the input is: ${trip.trip_id}');
-    final response = await http
-        .delete(Uri.parse('http://127.0.0.1:8000/trip/${trip.trip_id}/'));
+    final response =
+        await http.delete(Uri.parse(target + '/trip/${trip.trip_id}/'));
 
     if (response.statusCode == 204) {
       _trips.remove(trip);
@@ -87,7 +90,7 @@ class TripProvider with ChangeNotifier {
     p?.add(i);
 
     final response =
-        await http.put(Uri.parse('http://127.0.0.1:8000/trip/${trip.trip_id}/'),
+        await http.put(Uri.parse(target + '/trip/${trip.trip_id}/'),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },
@@ -114,19 +117,23 @@ class TripProvider with ChangeNotifier {
     }
   }
 
-  Trip getTrip(int? id) {
+  Trip? getTrip(int? id) {
     int n = 0;
+    Trip? p;
     for (int i = 0; i < _trips.length; i++) {
       if (id == _trips.elementAt(i).trip_id) {
-        Trip p = _trips[i];
-        id = p.trip_id;
-        n = i;
+        p = _trips[i];
+
+        print(p.trip_id);
         break;
-      } else {
-        print("notFound");
+        // } else {
+        //   print(id);
+        //   print("notFound");
+        //   print(p?.trip_id);
+        // }
       }
     }
-    return _trips[n];
+    return p;
   }
 
   void addTrip(Trip trip) async {
@@ -134,7 +141,7 @@ class TripProvider with ChangeNotifier {
     print(jsonEncode(trip));
     print(trip.trip_plan_start_datetime);
     print(trip.trip_plan_end_datetime);
-    final response = await http.post(Uri.parse('http://127.0.0.1:8000/trip/'),
+    final response = await http.post(Uri.parse(target + '/trip/'),
         headers: {"Content-Type": "application/json"}, body: json.encode(trip));
 
     if (response.statusCode == 201) {
@@ -155,7 +162,7 @@ class TripProvider with ChangeNotifier {
     print(jsonEncode(trip));
     print(trip.trip_plan_start_datetime);
     print(trip.trip_plan_end_datetime);
-    final response = await http.post(Uri.parse('http://127.0.0.1:8000/trip/'),
+    final response = await http.post(Uri.parse(target + '/trip/'),
         headers: {"Content-Type": "application/json"}, body: json.encode(trip));
 
     if (response.statusCode == 201) {
@@ -175,7 +182,7 @@ class TripProvider with ChangeNotifier {
   // void deleteTodo(Item item) async {
   //   print('The value of the input is: ${item.item_id}');
   //   final response = await http
-  //       .delete(Uri.parse('http://127.0.0.1:8000/item/${item.item_id}'));
+  //       .delete(Uri.parse(target+'/item/${item.item_id}'));
 
   //   if (response.statusCode == 204) {
   //     _items.remove(item);
@@ -183,7 +190,7 @@ class TripProvider with ChangeNotifier {
   //   }
 
   fetchTasksTrip() async {
-    const url = 'http://127.0.0.1:8000/trip/?format=json';
+    const url = target + '/trip/?format=json';
     // ignore: unused_local_variable
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
@@ -208,8 +215,7 @@ class FoodItemProvider extends ChangeNotifier {
   void addFoodItem(FoodItem fooditem) async {
     print(jsonEncode(fooditem));
 
-    final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/fooditem/'),
+    final response = await http.post(Uri.parse(target + '/fooditem/'),
         headers: {"Content-Type": "application/json"},
         body: json.encode(fooditem));
     print(response.body);
@@ -222,8 +228,8 @@ class FoodItemProvider extends ChangeNotifier {
 
   void deleteTodo(FoodItem fooditem) async {
     print('The value of the input is: ${fooditem.item_id}');
-    final response = await http.delete(
-        Uri.parse('http://127.0.0.1:8000/fooditem/${fooditem.item_id}'));
+    final response =
+        await http.delete(Uri.parse(target + '/fooditem/${fooditem.item_id}'));
 
     if (response.statusCode == 204) {
       _fooditems.remove(fooditem);
@@ -232,7 +238,7 @@ class FoodItemProvider extends ChangeNotifier {
   }
 
   fetchFoodItems() async {
-    const url = 'http://127.0.0.1:8000/fooditem/?format=json';
+    const url = target + '/fooditem/?format=json';
     // ignore: unused_local_variable
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
@@ -258,8 +264,7 @@ class ItemQuantityProvider extends ChangeNotifier {
   void addItemQuantity(ItemQuantity itemquantity) async {
     print(jsonEncode(itemquantity));
 
-    final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/itemquantity/'),
+    final response = await http.post(Uri.parse(target + '/itemquantity/'),
         headers: {"Content-Type": "application/json"},
         body: json.encode(itemquantity));
     print(response.body);
@@ -272,8 +277,8 @@ class ItemQuantityProvider extends ChangeNotifier {
 
   void deleteTodo(ItemQuantity itemquantity) async {
     print('The value of the input is: ${itemquantity.id}');
-    final response = await http.delete(
-        Uri.parse('http://127.0.0.1:8000/itemquantity/${itemquantity.id}'));
+    final response = await http
+        .delete(Uri.parse(target + '/itemquantity/${itemquantity.id}'));
 
     if (response.statusCode == 204) {
       _itemquantitys.remove(itemquantity);
@@ -282,7 +287,7 @@ class ItemQuantityProvider extends ChangeNotifier {
   }
 
   fetchItemQuantitys() async {
-    const url = 'http://127.0.0.1:8000/itemquantity/?format=json';
+    const url = target + '/itemquantity/?format=json';
     // ignore: unused_local_variable
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
@@ -308,8 +313,8 @@ class InventoryProvider extends ChangeNotifier {
 
   void deleteMealSchedule(Inventory inventory) async {
     // print('The value of the input is: ${hiker.hiker_id}');
-    final response = await http.delete(Uri.parse(
-        'http://127.0.0.1:8000/inventory/${inventory.inventory_id}/'));
+    final response = await http
+        .delete(Uri.parse(target + '/inventory/${inventory.inventory_id}/'));
 
     if (response.statusCode == 204) {
       _inventorys.remove(inventory);
@@ -322,8 +327,7 @@ class InventoryProvider extends ChangeNotifier {
     print(inventory);
     print('called');
     print(jsonEncode(inventory));
-    final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/inventory/'),
+    final response = await http.post(Uri.parse(target + '/inventory/'),
         headers: {"Content-Type": "application/json"},
         body: json.encode(inventory));
 
@@ -337,7 +341,7 @@ class InventoryProvider extends ChangeNotifier {
   // void deleteTodo(Item item) async {
   //   print('The value of the input is: ${item.item_id}');
   //   final response = await http
-  //       .delete(Uri.parse('http://127.0.0.1:8000/item/${item.item_id}'));
+  //       .delete(Uri.parse(target+'/item/${item.item_id}'));
 
   //   if (response.statusCode == 204) {
   //     _items.remove(item);
@@ -345,7 +349,7 @@ class InventoryProvider extends ChangeNotifier {
   //   }
 
   fetchTasksInventory() async {
-    const url = 'http://127.0.0.1:8000/inventory/?format=json';
+    const url = target + '/inventory/?format=json';
     // ignore: unused_local_variable
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
@@ -380,8 +384,8 @@ class HikerProvider with ChangeNotifier {
 
   void deleteHiker(Hiker hiker) async {
     // print('The value of the input is: ${hiker.hiker_id}');
-    final response = await http
-        .delete(Uri.parse('http://127.0.0.1:8000/hiker/${hiker.hiker_id}/'));
+    final response =
+        await http.delete(Uri.parse(target + '/hiker/${hiker.hiker_id}/'));
 
     if (response.statusCode == 204) {
       _hikers.remove(hiker);
@@ -394,7 +398,7 @@ class HikerProvider with ChangeNotifier {
     print(hiker);
     print('called');
     print(jsonEncode(hiker));
-    final response = await http.post(Uri.parse('http://127.0.0.1:8000/hiker/'),
+    final response = await http.post(Uri.parse(target + '/hiker/'),
         headers: {"Content-Type": "application/json"},
         body: json.encode(hiker));
 
@@ -408,7 +412,7 @@ class HikerProvider with ChangeNotifier {
   // void deleteTodo(Item item) async {
   //   print('The value of the input is: ${item.item_id}');
   //   final response = await http
-  //       .delete(Uri.parse('http://127.0.0.1:8000/item/${item.item_id}'));
+  //       .delete(Uri.parse(target+'/item/${item.item_id}'));
 
   //   if (response.statusCode == 204) {
   //     _items.remove(item);
@@ -416,7 +420,7 @@ class HikerProvider with ChangeNotifier {
   //   }
 
   fetchTasksHiker() async {
-    const url = 'http://127.0.0.1:8000/hiker/?format=json';
+    const url = target + '/hiker/?format=json';
     // ignore: unused_local_variable
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
