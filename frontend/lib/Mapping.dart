@@ -25,46 +25,39 @@ class Mapping extends StatefulWidget {
 }
 
 class _MapState extends State<Mapping> {
-  final mapController = MapController();
+  late final MapController mapController;
   final lines = <Polyline>[];
   //final marker = <Marker>[];
   ElevationPoint? hoverPoint;
-  final kelso = LatLng(34.8922621, -115.6989714);
-  final mary = LatLng(34.9443528, -115.5133921);
-  PolyEditor? polyEditor;
-  String url = '';
+  late PolyEditor polyEditor;
   List<Polyline> polyLines = [];
   var testPolyline = Polyline(color: Colors.deepOrange, points: []);
+  LatLng kelso = LatLng(34.8922621, -115.6989714);
+  LatLng mary = LatLng(34.9443528, -115.5133921);
 
   ScreenshotController screenshotController = ScreenshotController();
 
   @override
   void initState() {
     locationPermissionRequest();
-
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Use `MapController` as needed
-      mapController.move(kelso, 2);
-    });
+    mapController = MapController();
+    processLines();
+
     polyEditor = PolyEditor(
       addClosePathMarker: false,
       points: testPolyline.points,
       pointIcon: const Icon(Icons.crop_square, size: 23),
       intermediateIcon: const Icon(Icons.lens, size: 15, color: Colors.grey),
-      // callbackRefresh: () => {
-      //   setState(() {
-      //     processLines();
-      //   })
-      // },
+      callbackRefresh: () => {setState(() {})},
     );
 
     polyLines.add(testPolyline);
   }
 
   Future<void> processLines() async {
-    final data = await rootBundle
-        .loadString('frontend/assets/geojson/southmojave.geojson');
+    final data =
+        await rootBundle.loadString('assets/geojson/southmojave.geojson');
     final geojson = GeoJson();
     geojson.processedLines.listen((GeoJsonLine line) {
       setState(() => lines.add(Polyline(
@@ -100,7 +93,6 @@ class _MapState extends State<Mapping> {
 
   @override
   Widget build(BuildContext context) {
-    Tile t;
     return Scaffold(
         appBar: AppBar(
           title: const Text('Mapping'),
@@ -108,12 +100,14 @@ class _MapState extends State<Mapping> {
             IconButton(
               onPressed: () {
                 showSearch(context: context, delegate: CustomSearchDelegate());
+                kelso = LatLng(34.8922621, -115.6989714);
+                mary = LatLng(34.9443528, -115.5133921);
                 var count = 0;
                 if (count == 0) {
-                  mapController.move(kelso, 3);
+                  mapController.move(kelso, 20);
                   count++;
                 } else {
-                  mapController.move(mary, 3);
+                  mapController.move(mary, 20);
                 }
               },
               icon: const Icon(Icons.search),
@@ -131,8 +125,8 @@ class _MapState extends State<Mapping> {
                 child: FlutterMap(
                   mapController: MapController(),
                   options: MapOptions(
-                    center: kelso,
-                    zoom: 10,
+                    center: LatLng(32.7157, -117.1611),
+                    zoom: 8,
                     plugins: [
                       const LocationMarkerPlugin(),
                       DragMarkerPlugin(),
@@ -162,9 +156,16 @@ class _MapState extends State<Mapping> {
               FloatingActionButton(
                   child: const Icon(Icons.download),
                   onPressed: () {
+                    kelso = LatLng(34.8922621, -115.6989714);
+                    mary = LatLng(34.9443528, -115.5133921);
+                    var count = 0;
+                    if (count == 0) {
+                      mapController.move(kelso, 20);
+                      count++;
+                    } else {
+                      mapController.move(mary, 20);
+                    }
                     screenshotController.capture(pixelRatio: 2.0);
-
-                    print(Map);
                   }),
               /*
                   FloatingActionButton(
